@@ -1,4 +1,4 @@
-package com.leave.employee_controller;
+package com.leave.employee.controller;
 
 import java.util.List;
 

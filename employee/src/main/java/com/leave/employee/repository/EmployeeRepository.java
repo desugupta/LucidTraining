@@ -1,5 +1,4 @@
-package com.leave.employee_repository;
-
+package com.leave.employee.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.leave.employee_model.EmployeeModel;
