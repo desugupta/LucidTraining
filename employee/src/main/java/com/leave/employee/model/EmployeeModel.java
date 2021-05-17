@@ -1,4 +1,4 @@
-package com.leave.employee_model;
+package com.leave.employee.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
