@@ -1,5 +1,5 @@
 package com.leave.employee.controller;
-
+/*
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +37,12 @@ public class EmployeeController {
 	@DeleteMapping(value = "/{id}")
 	public String deleteEmployee(@PathVariable("id") int id) {
 		return EmployeeService.deleteEmployee(id); 
+	}
+
+	public static void main(String[] args) {
+		EmployeeService
 	} 
 	
 	
 }
+*/
