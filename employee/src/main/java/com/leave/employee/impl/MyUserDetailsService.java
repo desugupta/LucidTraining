@@ -1,18 +1,16 @@
 package com.leave.employee.impl;
 
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.leave.employee.model.UserModel;
+import com.leave.employee.domain.EmployeeUser;
 import com.leave.employee.repository.UserRepository;
-
-import java.util.ArrayList;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
@@ -23,7 +21,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserModel foundedUser = userRepository.findByUserName(username);
+		EmployeeUser foundedUser = userRepository.findByUserName(username);
 		if (foundedUser == null) {
 			return null;
 		}

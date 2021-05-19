@@ -1,8 +1,8 @@
 package com.leave.employee.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,16 +11,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.leave.employee.domain.EmployeeUser;
 import com.leave.employee.impl.JwtUtil;
 import com.leave.employee.impl.MyUserDetailsService;
+import com.leave.employee.impl.SequenceGeneratorService;
 import com.leave.employee.model.AuthenticationRequest;
 import com.leave.employee.model.AuthenticationResponse;
-import com.leave.employee.model.UserModel;
 import com.leave.employee.repository.UserRepository;
 
 @RestController
 public class AuthController {
+	
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -34,15 +37,23 @@ public class AuthController {
 	@Autowired
 	private JwtUtil jwtUtil;
 	
+	@Autowired
+	private SequenceGeneratorService sequenceGeneratorService;
+	
+	public static final String SEQUENCE_NAME="user_sequence";
+	
+	
 
 	@PostMapping("/subscription")
 	public ResponseEntity<?> subscribeClient(@RequestBody AuthenticationRequest authenticationRequest) {
 		String userName = authenticationRequest.getUserName();
 		String password = authenticationRequest.getPassword();
-		UserModel userModel = new UserModel();
+		EmployeeUser userModel = new EmployeeUser();
 		userModel.setUserName(userName);
 		userModel.setPassword(password);
-		try {
+		userModel.setEmployeeId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME)); 
+		userModel=modelMapper.map(userModel, EmployeeUser.class);
+		try { 
 			userRepository.save(userModel);
 		} catch (Exception e) {
 			return ResponseEntity.ok(new AuthenticationResponse("Error during client Subscription" + userName));

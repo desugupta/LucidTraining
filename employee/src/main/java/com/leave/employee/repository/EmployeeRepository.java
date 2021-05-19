@@ -1,14 +1,12 @@
 package com.leave.employee.repository;
-/*
+
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+import com.leave.employee.domain.EmployeeUser;
 
-import com.leave.employee_model.EmployeeModel;
+@Repository
+public interface EmployeeRepository extends MongoRepository<EmployeeUser, String> {
 
-public interface EmployeeRepository extends MongoRepository<EmployeeModel, String> {
-
-	EmployeeModel findById(int id);
-
-	void deleteById(int id); 
+	public EmployeeUser findByEmployeeId(int employeeId);
 
 }
-*/
