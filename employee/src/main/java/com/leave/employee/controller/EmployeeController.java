@@ -32,6 +32,10 @@ public class EmployeeController {
 	
 	private final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 	
+	/**
+	 * @author rajasekhar.d
+	 * @description to save the employee
+	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> saveEmployee(@RequestBody EmployeeUser employeeUser) {
 		try {
@@ -69,7 +73,7 @@ public class EmployeeController {
 	 * @description to get the employee by employeeId
 	 */
 	@RequestMapping(value = "/{employeeId}", method = RequestMethod.GET)
-	public ResponseEntity<?> getEmployee(@PathVariable("employeeId") String employeeId) {
+	public ResponseEntity<?> getEmployee(@PathVariable("employeeId") int employeeId) {
 		try {
 			logger.info("+++++ Entry into getEmployee() method in Controller +++++");
 			EmployeeUser employee = employeeService.getEmployee(employeeId);

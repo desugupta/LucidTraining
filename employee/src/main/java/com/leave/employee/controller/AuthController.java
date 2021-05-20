@@ -45,20 +45,41 @@ public class AuthController {
 	
 
 	@PostMapping("/subscription")
-	public ResponseEntity<?> subscribeClient(@RequestBody AuthenticationRequest authenticationRequest) {
-		String userName = authenticationRequest.getUserName();
-		String password = authenticationRequest.getPassword();
-		EmployeeUser userModel = new EmployeeUser();
-		userModel.setUserName(userName);
-		userModel.setPassword(password);
-		userModel.setEmployeeId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME)); 
-		userModel=modelMapper.map(userModel, EmployeeUser.class);
-		try { 
-			userRepository.save(userModel);
-		} catch (Exception e) {
-			return ResponseEntity.ok(new AuthenticationResponse("Error during client Subscription" + userName));
+	public ResponseEntity<?> subscribeClient(@RequestBody EmployeeUser employeeUser) {
+		EmployeeUser employeeDetails = new EmployeeUser();
+		employeeDetails.setEmployeeId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME)); 
+		String phoneNumber = employeeUser.getMobileNo();
+		if (!phoneNumber.startsWith("+91")) {
+			phoneNumber = "+91" + phoneNumber;
 		}
-		return ResponseEntity.ok(new AuthenticationResponse("Sucessful Subscription for client" + userName));
+		employeeDetails.setUserName(employeeUser.getUserName());
+		employeeDetails.setPassword(employeeUser.getPassword());
+		  employeeDetails.setFirstName(employeeUser.getFirstName());
+		  employeeDetails.setLastName(employeeUser.getLastName());
+		  employeeDetails.setEmailId(employeeUser.getEmailId());
+		  employeeDetails.setAge(employeeUser.getAge());
+		  employeeDetails.setGender(employeeUser.getGender());
+		  employeeDetails.setMobileNo(phoneNumber);
+		  employeeDetails.setDob(employeeUser.getDob());
+          employeeDetails.setRoles(employeeUser.getRoles());
+          employeeDetails.setDepartment(employeeUser.getDepartment());
+		  employeeDetails.setDesignation(employeeUser.getDesignation());
+		  employeeDetails.setCountry(employeeUser.getCountry());
+		  employeeDetails.setCity(employeeUser.getCity());
+		  employeeDetails.setPincode(employeeUser.getPincode());
+		  employeeDetails.setEmployeeStatus(employeeUser.getEmployeeStatus());
+		  employeeDetails.setPermanentAddress(employeeUser.getPermanentAddress());
+		  employeeDetails.setBloodGroup(employeeUser.getBloodGroup());
+		  employeeDetails.setJoinDate(employeeUser.getJoinDate());
+		  employeeDetails.setEndDate(employeeUser.getEndDate());
+		  employeeDetails.setManagerEmpId(employeeUser.getManagerEmpId());
+		employeeDetails=modelMapper.map(employeeDetails, EmployeeUser.class);
+		try { 
+			userRepository.save(employeeDetails);
+		} catch (Exception e) {
+			return ResponseEntity.ok(new AuthenticationResponse("Error during client Subscription" + employeeUser.getUserName()));
+		}
+		return ResponseEntity.ok(new AuthenticationResponse("Sucessful Subscription for client" + employeeUser.getUserName()));
 	}
 
 	@PostMapping("/authentication")
