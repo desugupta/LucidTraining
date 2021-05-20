@@ -7,6 +7,6 @@ import com.leave.employee.domain.EmployeeUser;
 @Repository
 public interface EmployeeRepository extends MongoRepository<EmployeeUser, String> {
 
-	public EmployeeUser findByEmployeeId(int employeeId);
+	public EmployeeUser findByEmployeeId(int i);
 
 }

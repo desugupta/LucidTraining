@@ -1,172 +1,148 @@
 package com.leave.employee.impl;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
-
 import com.leave.employee.domain.EmployeeUser;
-import com.leave.employee.domain.Role;
 import com.leave.employee.repository.EmployeeRepository;
 import com.leave.employee.service.EmployeeService;
 
 @Service
-public class EmployeeImpl implements EmployeeService{
-	
-	@Autowired
-	private MongoTemplate mongoTemplate;
-	
+public class EmployeeImpl implements EmployeeService {
+
 	@Autowired
 	private EmployeeRepository employeeRepository;
-	
-	@Autowired
-	private SequenceGeneratorService sequenceGeneratorService;
-	
-	public static final String SEQUENCE_NAME="user_sequence";
-	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	@Autowired
+	private ModelMapper modelMapper;
+
+	public static final String SEQUENCE_NAME = "user_sequence";
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	public EmployeeUser saveEmployee(EmployeeUser employeeUser) {
-		//employeeUser.setId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME));
-		return employeeRepository.save(employeeUser);
+		try {
+			EmployeeUser employeeDetails = employeeRepository.findByEmployeeId(employeeUser.getEmployeeId());
+			String phoneNumber = employeeUser.getMobileNo();
+			if (!phoneNumber.startsWith("+91")) {
+				phoneNumber = "+91" + phoneNumber;
+			}
+			employeeDetails.setFirstName(employeeUser.getFirstName());
+			employeeDetails.setLastName(employeeUser.getLastName());
+			employeeDetails.setEmailId(employeeUser.getEmailId());
+			employeeDetails.setAge(employeeUser.getAge());
+			employeeDetails.setGender(employeeUser.getGender());
+			employeeDetails.setMobileNo(phoneNumber);
+			employeeDetails.setDob(employeeUser.getDob());
+			employeeDetails.setRoles(employeeUser.getRoles());
+			employeeDetails.setDepartment(employeeUser.getDepartment());
+			employeeDetails.setDesignation(employeeUser.getDesignation());
+			employeeDetails.setCountry(employeeUser.getCountry());
+			employeeDetails.setCity(employeeUser.getCity());
+			employeeDetails.setPincode(employeeUser.getPincode());
+			employeeDetails.setEmployeeStatus(employeeUser.getEmployeeStatus());
+			employeeDetails.setPermanentAddress(employeeUser.getPermanentAddress());
+			employeeDetails.setBloodGroup(employeeUser.getBloodGroup());
+			employeeDetails.setJoinDate(employeeUser.getJoinDate());
+			employeeDetails.setEndDate(employeeUser.getEndDate());
+			employeeDetails.setManagerEmpId(employeeUser.getManagerEmpId());
+			return employeeRepository.save(employeeUser);
+		} catch (Exception e) {
+			logger.error("Error occurred while saving an employee:", e);
+			throw e;
+		}
 	}
-	
+
 	@Override
 	public List<EmployeeUser> getAllEmployees() {
-			try {
-				List<EmployeeUser> employees = employeeRepository.findAll();
-				return employees;
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.error("Error occurred while getting all employee infoList:", e);
-				throw e;
-			}
+		try {
+			List<EmployeeUser> employees = employeeRepository.findAll();
+			return employees;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Error occurred while getting all employee infoList:", e);
+			throw e;
 		}
+	}
 
 	@Override
-	public EmployeeUser getEmployee(String employeeId) {
-			try {
-				EmployeeUser employeeUser = null;
-				if (employeeId != null && !employeeId.isEmpty()) {
-					employeeUser = employeeRepository.findByEmployeeId(employeeId);
-				}
-				return employeeUser;
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.error("Error occurred while getting the employeeInfo:", e);
-				throw e;
-			}
-}
-
-
-
-{ EmployeeUser empUser=new EmployeeUser(); if()
-  employeeDetails.setEmployee_id(employeeModel.getEmployee_id());
-  employeeDetails.setAge(employeeModel.getAge());
-  employeeDetails.setBloodGroup(employeeModel.getBloodGroup());
-  employeeDetails.setCity(employeeModel.getCity());
-  employeeDetails.setCountry(employeeModel.getCountry());
-  employeeDetails.setDepartment(employeeModel.getDepartment());
-  employeeDetails.setDesignation(employeeModel.getDesignation());
-  employeeDetails.setDob(employeeModel.getDob());
-  employeeDetails.setEmailId(employeeModel.getEmailId());
-  employeeDetails.setEmployeeStatus(employeeModel.getEmployeeStatus());
-  employeeDetails.setEndDate(employeeModel.getEndDate());
-  employeeDetails.setFirstName(employeeModel.getFirstName());
-  employeeDetails.setGender(employeeModel.getGender());
-  employeeDetails.setJoinDate(employeeModel.getJoinDate());
-  employeeDetails.setLastName(employeeModel.getLastName());
-  employeeDetails.setMobileNo(employeeModel.getMobileNo());
-  employeeDetails.setPermenantAddress(employeeModel.getPermenantAddress());
-  employeeDetails.setPincode(employeeModel.getPincode());
-  employeeDetails.setRole(employeeModel.getRole()); return null; }
-
-	private String emailId;
-	private int age;
-	private String gender;
-	private String mobileNo;
-	private Date dob;
-	private List<Role> roles;
-	private String department;
-	private String designation;
-	private String country;
-	private String city;
-	private int pincode;
-	private String employeeStatus;
-	private String permanentAddress;
-	private String bloodGroup;
-	private Date joinDate;
-	private Date endDate;
-	private String managerEmpId;
+	public EmployeeUser getEmployee(int employeeId) {
+		try {
+			EmployeeUser employeeUser = null;
+			employeeUser = employeeRepository.findByEmployeeId(employeeId);
+			return employeeUser;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Error occurred while getting the employeeInfo:", e);
+			throw e;
+		}
+	}
 
 	@Override
 	public EmployeeUser updateEmployee(EmployeeUser employeeModel) {
 		try {
-			EmployeeUser employeeDetails = employeeRepository.findByEmployeeId(employeeModel.getEmployeeId());  
-			if(employeeDetails.getFirstName()!=null && !employeeDetails.getFirstName().isEmpty()) {
-				  employeeDetails.setFirstName(employeeModel.getFirstName());
+			EmployeeUser employeeDetails = employeeRepository.findByEmployeeId(employeeModel.getEmployeeId());
+			if (employeeDetails.getEmployeeStatus() != null && !employeeDetails.getEmployeeStatus().isEmpty()) {
+				employeeDetails.setUserName(employeeModel.getUserName());
 			}
-			if(employeeDetails.getLastName()!=null && !employeeDetails.getLastName().isEmpty()) {
-				  employeeDetails.setLastName(employeeModel.getLastName());
+			if (employeeDetails.getFirstName() != null && !employeeDetails.getFirstName().isEmpty()) {
+				employeeDetails.setFirstName(employeeModel.getFirstName());
 			}
-			if(employeeDetails.getEmailId()!=null && !employeeDetails.getEmailId().isEmpty()) {
-				  employeeDetails.setEmailId(employeeModel.getEmailId());
+			if (employeeDetails.getLastName() != null && !employeeDetails.getLastName().isEmpty()) {
+				employeeDetails.setLastName(employeeModel.getLastName());
 			}
-			if(employeeDetails.getAge()) {
-				  employeeDetails.setAge(employeeModel.getAge());
+			if (employeeDetails.getEmailId() != null && !employeeDetails.getEmailId().isEmpty()) {
+				employeeDetails.setEmailId(employeeModel.getEmailId());
 			}
-			if(employeeDetails.getFirstName()!=null && !employeeDetails.getFirstName().isEmpty()) {
-				  employeeDetails.setFirstName(employeeModel.getFirstName());
+			if (employeeDetails.getAge() != null) {
+				employeeDetails.setAge(employeeModel.getAge());
 			}
-			if(employeeDetails.getFirstName()!=null && !employeeDetails.getFirstName().isEmpty()) {
-				  employeeDetails.setFirstName(employeeModel.getFirstName());
+			if (employeeDetails.getGender() != null && !employeeDetails.getGender().isEmpty()) {
+				employeeDetails.setGender(employeeModel.getGender());
 			}
-			if(employeeDetails.getFirstName()!=null && !employeeDetails.getFirstName().isEmpty()) {
-				  employeeDetails.setFirstName(employeeModel.getFirstName());
+			if (employeeDetails.getMobileNo() != null && !employeeDetails.getMobileNo().isEmpty()) {
+				String phoneNumber = employeeModel.getMobileNo();
+				if (!phoneNumber.startsWith("+91")) {
+					phoneNumber = "+91" + phoneNumber;
+				}
+				employeeDetails.setMobileNo(phoneNumber);
 			}
-			if(employeeDetails.getFirstName()!=null && !employeeDetails.getFirstName().isEmpty()) {
-				  employeeDetails.setFirstName(employeeModel.getFirstName());
+			if (employeeDetails.getDepartment() != null && !employeeDetails.getDepartment().isEmpty()) {
+				employeeDetails.setDepartment(employeeModel.getDepartment());
 			}
-			if(employeeDetails.getFirstName()!=null && !employeeDetails.getFirstName().isEmpty()) {
-				  employeeDetails.setFirstName(employeeModel.getFirstName());
+			if (employeeDetails.getDesignation() != null && !employeeDetails.getDesignation().isEmpty()) {
+				employeeDetails.setDesignation(employeeModel.getDesignation());
 			}
-			if(employeeDetails.getFirstName()!=null && !employeeDetails.getFirstName().isEmpty()) {
-				  employeeDetails.setFirstName(employeeModel.getFirstName());
+			if (employeeDetails.getCountry() != null && !employeeDetails.getCountry().isEmpty()) {
+				employeeDetails.setCountry(employeeModel.getCountry());
 			}
-			if(employeeDetails.getFirstName()!=null && !employeeDetails.getFirstName().isEmpty()) {
-				  employeeDetails.setFirstName(employeeModel.getFirstName());
+			if (employeeDetails.getRoles() != null && !employeeDetails.getRoles().isEmpty()) {
+				employeeDetails.setRoles(employeeModel.getRoles());
 			}
-			if(employeeDetails.getFirstName()!=null && !employeeDetails.getFirstName().isEmpty()) {
-				  employeeDetails.setFirstName(employeeModel.getFirstName());
+			if (employeeDetails.getCity() != null && !employeeDetails.getCity().isEmpty()) {
+				employeeDetails.setCity(employeeModel.getCity());
 			}
-			
-			
-			
-			  employeeDetails.setAge(employeeModel.getAge());
-			  employeeDetails.setBloodGroup(employeeModel.getBloodGroup());
-			  employeeDetails.setCity(employeeModel.getCity());
-			  employeeDetails.setCountry(employeeModel.getCountry());
-			  employeeDetails.setDepartment(employeeModel.getDepartment());
-			  employeeDetails.setDesignation(employeeModel.getDesignation());
-			  employeeDetails.setDob(employeeModel.getDob());
-			  employeeDetails.setEmailId(employeeModel.getEmailId());
-			  employeeDetails.setEmployeeStatus(employeeModel.getEmployeeStatus());
-			  employeeDetails.setEndDate(employeeModel.getEndDate());
-			  employeeDetails.setGender(employeeModel.getGender());
-			  employeeDetails.setJoinDate(employeeModel.getJoinDate());
-			  employeeDetails.setLastName(employeeModel.getLastName());
-			  employeeDetails.setMobileNo(employeeModel.getMobileNo());
-			  employeeDetails.setPermenantAddress(employeeModel.getPermenantAddress());
-			  employeeDetails.setPincode(employeeModel.getPincode());
-			  employeeDetails.setRole(employeeModel.getRole());
+			if (employeeDetails.getPincode() != null && !employeeDetails.getPincode().isEmpty()) {
+				employeeDetails.setPincode(employeeModel.getPincode());
+			}
+			if (employeeDetails.getEmployeeStatus() != null && !employeeDetails.getEmployeeStatus().isEmpty()) {
+				employeeDetails.setEmployeeStatus(employeeModel.getEmployeeStatus());
+			}
+			if (employeeDetails.getPermanentAddress() != null && !employeeDetails.getPermanentAddress().isEmpty()) {
+				employeeDetails.setPermanentAddress(employeeModel.getPermanentAddress());
+			}
+			if (employeeDetails.getBloodGroup() != null && !employeeDetails.getBloodGroup().isEmpty()) {
+				employeeDetails.setBloodGroup(employeeModel.getBloodGroup());
+			}
+			if (employeeDetails.getManagerEmpId() != null) {
+				employeeDetails.setManagerEmpId(employeeModel.getManagerEmpId());
+			}
 			employeeDetails = employeeRepository.save(employeeDetails);
+			employeeDetails = modelMapper.map(employeeDetails, EmployeeUser.class);
 			return employeeDetails;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -175,6 +151,4 @@ public class EmployeeImpl implements EmployeeService{
 		}
 	}
 
-	
-	
 }

@@ -1,11 +1,13 @@
 package com.leave.employee.domain;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "Employee")
-public class EmployeeUser {
+public class EmployeeUser extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;
 
@@ -27,11 +29,11 @@ public class EmployeeUser {
 	private Integer versionId;
 	private String userName;
 	private String password;
-	private int employeeId;
+	private Integer employeeId;
 	private String firstName;
 	private String lastName;
 	private String emailId;
-	private int age;
+	private Integer age;
 	private String gender;
 	private String mobileNo;
 	private Date dob;
@@ -40,13 +42,14 @@ public class EmployeeUser {
 	private String designation;
 	private String country;
 	private String city;
-	private int pincode;
+	private String pincode;
 	private String employeeStatus;
 	private String permanentAddress;
 	private String bloodGroup;
+	// @DateTimeFormat(pattern = "YYYY-MM-dd")
 	private Date joinDate;
 	private Date endDate;
-	private String managerEmpId;
+	private Integer managerEmpId;
 
 	public String getId() {
 		return id;
@@ -80,11 +83,11 @@ public class EmployeeUser {
 		this.password = password;
 	}
 
-	public int getEmployeeId() {
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployeeId(int employeeId) {
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
 
@@ -112,11 +115,11 @@ public class EmployeeUser {
 		this.emailId = emailId;
 	}
 
-	public int getAge() {
+	public Integer getAge() {
 		return age;
 	}
 
-	public void setAge(int age) {
+	public void setAge(Integer age) {
 		this.age = age;
 	}
 
@@ -184,11 +187,11 @@ public class EmployeeUser {
 		this.city = city;
 	}
 
-	public int getPincode() {
+	public String getPincode() {
 		return pincode;
 	}
 
-	public void setPincode(int pincode) {
+	public void setPincode(String pincode) {
 		this.pincode = pincode;
 	}
 
@@ -232,11 +235,11 @@ public class EmployeeUser {
 		this.endDate = endDate;
 	}
 
-	public String getManagerEmpId() {
+	public Integer getManagerEmpId() {
 		return managerEmpId;
 	}
 
-	public void setManagerEmpId(String managerEmpId) {
+	public void setManagerEmpId(Integer managerEmpId) {
 		this.managerEmpId = managerEmpId;
 	}
 
