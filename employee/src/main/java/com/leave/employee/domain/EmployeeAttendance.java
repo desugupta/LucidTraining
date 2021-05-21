@@ -15,33 +15,17 @@ public class EmployeeAttendance extends BaseDomain {
 	private String id;
 	@Version
 	private Integer versionId;
-	private String employeeId;
+	private Integer employeeId;
 	private Date normalDate;
-	private Date timeIn;
-	private Date timeOut;
-	private int workingHours;
-	private String month;
+	private String timeIn;
+	private String timeOut;
+	private String workingHours;
+//	private String month;
 	private String location;// office
 	// private long attencount;
 
 	public String getId() {
 		return id;
-	}
-
-	public String getMonth() {
-		return month;
-	}
-
-	public void setMonth(String month) {
-		this.month = month;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	public void setId(String id) {
@@ -56,11 +40,11 @@ public class EmployeeAttendance extends BaseDomain {
 		this.versionId = versionId;
 	}
 
-	public String getEmployeeId() {
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
 
@@ -72,35 +56,42 @@ public class EmployeeAttendance extends BaseDomain {
 		this.normalDate = normalDate;
 	}
 
-	public Date getTimeIn() {
+	public String getTimeIn() {
 		return timeIn;
 	}
 
-	public void setTimeIn(Date timeIn) {
+	public void setTimeIn(String timeIn) {
 		this.timeIn = timeIn;
 	}
 
-	public Date getTimeOut() {
+	public String getTimeOut() {
 		return timeOut;
 	}
 
-	public void setTimeOut(Date timeOut) {
+	public void setTimeOut(String timeOut) {
 		this.timeOut = timeOut;
 	}
 
-	public int getWorkingHours() {
+	public String getWorkingHours() {
 		return workingHours;
 	}
 
-	public void setWorkingHours(int workingHours) {
+	public void setWorkingHours(String workingHours) {
 		this.workingHours = workingHours;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	@Override
 	public String toString() {
 		return "EmployeeAttendance [id=" + id + ", versionId=" + versionId + ", employeeId=" + employeeId
 				+ ", normalDate=" + normalDate + ", timeIn=" + timeIn + ", timeOut=" + timeOut + ", workingHours="
-				+ workingHours + ", month=" + month + ", location=" + location + "]";
+				+ workingHours + ", location=" + location + "]";
 	}
-
 }

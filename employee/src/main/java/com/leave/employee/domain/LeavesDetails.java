@@ -26,6 +26,7 @@ public class LeavesDetails extends BaseDomain {
 	private String leaveReason;
 	private String managerEmpId;
 	private String department;
+	private HolidaysList holidaysList;
 
 	public String getId() {
 		return id;

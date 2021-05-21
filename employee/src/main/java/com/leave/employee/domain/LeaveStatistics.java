@@ -1,5 +1,7 @@
 package com.leave.employee.domain;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,7 +16,8 @@ public class LeaveStatistics extends BaseDomain {
 	@Version
 	private Integer versionId;
 	private String employeeId;
-	private String leaveBalance;// [sick,earned leave]
+	//private String leaveBalance;// [sick,earned leave]
+	private List<LeaveTypeBalance> leaveTypeBalance;
 	private String accrusedThisYear;
 	private String creditedFromLastYear;
 	private String annualAllotment;
