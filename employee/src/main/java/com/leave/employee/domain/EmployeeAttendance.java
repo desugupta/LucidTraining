@@ -20,7 +20,17 @@ public class EmployeeAttendance extends BaseDomain {
 	private String timeIn;
 	private String timeOut;
 	private String workingHours;
-//	private String month;
+	private float working;
+
+	public float getWorking() {
+		return working;
+	}
+
+	public void setWorking(float working) {
+		this.working = working;
+	}
+
+	// private String month;
 	private String location;// office
 	// private long attencount;
 

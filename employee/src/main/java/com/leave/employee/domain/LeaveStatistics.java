@@ -6,71 +6,91 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Setter
+@Getter
+@ToString
 @Document(collection = "LeaveStatistics")
 public class LeaveStatistics extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	private String id;
 	@Version
 	private Integer versionId;
-	private String employeeId;
-	//private String leaveBalance;// [sick,earned leave]
+	private Integer employeeId;
+	// private String leaveBalance;// [sick,earned leave]
 	private List<LeaveTypeBalance> leaveTypeBalance;
-	private String accrusedThisYear;
-	private String creditedFromLastYear;
-	private String annualAllotment;
-	//private String leaveRequest;// [planned,approved]	
-	
+	private Integer accrusedThisYear;
+	private Integer creditedFromLastYear;
+	private Integer annualAllotment;
+
+	// private String leaveRequest;// [planned,approved]
 	public String getId() {
 		return id;
 	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
+
 	public Integer getVersionId() {
 		return versionId;
 	}
+
 	public void setVersionId(Integer versionId) {
 		this.versionId = versionId;
 	}
-	public String getEmployeeId() {
+
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(String employeeId) {
+
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
-	public String getLeaveBalance() {
-		return leaveBalance;
+
+	public List<LeaveTypeBalance> getLeaveTypeBalance() {
+		return leaveTypeBalance;
 	}
-	public void setLeaveBalance(String leaveBalance) {
-		this.leaveBalance = leaveBalance;
+
+	public void setLeaveTypeBalance(List<LeaveTypeBalance> leaveTypeBalance) {
+		this.leaveTypeBalance = leaveTypeBalance;
 	}
-	public String getAccrusedThisYear() {
+
+	public Integer getAccrusedThisYear() {
 		return accrusedThisYear;
 	}
-	public void setAccrusedThisYear(String accrusedThisYear) {
+
+	public void setAccrusedThisYear(Integer accrusedThisYear) {
 		this.accrusedThisYear = accrusedThisYear;
 	}
-	public String getCreditedFromLastYear() {
+
+	public Integer getCreditedFromLastYear() {
 		return creditedFromLastYear;
 	}
-	public void setCreditedFromLastYear(String creditedFromLastYear) {
+
+	public void setCreditedFromLastYear(Integer creditedFromLastYear) {
 		this.creditedFromLastYear = creditedFromLastYear;
 	}
-	public String getAnnualAllotment() {
+
+	public Integer getAnnualAllotment() {
 		return annualAllotment;
 	}
-	public void setAnnualAllotment(String annualAllotment) {
+
+	public void setAnnualAllotment(Integer annualAllotment) {
 		this.annualAllotment = annualAllotment;
 	}
+
 	@Override
 	public String toString() {
 		return "LeaveStatistics [id=" + id + ", versionId=" + versionId + ", employeeId=" + employeeId
-				+ ", leaveBalance=" + leaveBalance + ", accrusedThisYear=" + accrusedThisYear
+				+ ", leaveTypeBalance=" + leaveTypeBalance + ", accrusedThisYear=" + accrusedThisYear
 				+ ", creditedFromLastYear=" + creditedFromLastYear + ", annualAllotment=" + annualAllotment + "]";
 	}
-	
 
 }

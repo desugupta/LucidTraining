@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.leave.employee.domain.HolidaysList;
+import org.springframework.util.StringUtils;
+
+import com.leave.employee.domain.HolidayCollection;
 import com.leave.employee.repository.HolidayRepository;
 import com.leave.employee.service.HolidayService;
 
@@ -15,13 +17,20 @@ public class HolidaysListImpl implements HolidayService {
 	private HolidayRepository holidayRepository;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+/*
+	description  
+	params 
+	return
+	*/
 	@Override
-	public HolidaysList saveHolidayDate(HolidaysList holidaysList) {
+	public HolidayCollection saveHolidayInformation(HolidayCollection holidaysList) {
 		try {
-			HolidaysList holidayObj = new HolidaysList();
+			HolidayCollection holidayObj = new HolidayCollection();
+			holidayObj.setHolidayYear(holidaysList.getHolidayYear());
 			holidayObj.setHolidayId(holidaysList.getHolidayId());
-			holidayObj.setHolidayDate(holidaysList.getHolidayDate());
+		//	holidayObj.setHolidayDate(holidaysList.getHolidayDate());
+			holidayObj.setHoliday(holidaysList.getHoliday());
+
 			holidayObj.setReason(holidaysList.getReason());
 			holidayObj = holidayRepository.save(holidayObj);
 			return holidayObj;
@@ -31,5 +40,7 @@ public class HolidaysListImpl implements HolidayService {
 			throw e;
 		}
 	}
+	
+	
 
 }

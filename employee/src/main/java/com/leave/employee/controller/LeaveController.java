@@ -1,5 +1,7 @@
 package com.leave.employee.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.leave.employee.domain.EmployeeAttendance;
 import com.leave.employee.domain.LeavesDetails;
 import com.leave.employee.domain.ResponseObject;
-import com.leave.employee.service.AttendanceService;
+import com.leave.employee.domain.Role;
 import com.leave.employee.service.LeaveService;
 import com.leave.employee.util.ResponseUtil;
 
@@ -32,17 +34,36 @@ public class LeaveController {
 	 * @description To apply for the leave
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> applyLeave(@RequestBody EmployeeAttendance attendance) {
+	public ResponseEntity<?> applyLeave(@RequestBody LeavesDetails leavesDetails) {
 		try {
 			logger.info("+++++ Entry into applyLeave() method in Controller +++++");
-			LeavesDetails leave = leaveService.applyLeave(attendance);
+			LeavesDetails leave = leaveService.applyLeave(leavesDetails);
 			logger.info("+++++ Exit from applyLeave() method in Controller +++++");
 			return new ResponseEntity<ResponseObject<?>>(ResponseUtil.createSuccessResponse(leave), HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error in saving the employee attendance:", e.getMessage());
+			logger.error("Error in applying the leave:", e.getMessage());
 			return new ResponseEntity<ResponseObject<?>>(ResponseUtil.createErrorResponse(e.getMessage()),
 					HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	/**
+	 * @author rajasekhar.d
+	 * @description to update the leave request
+	 */
+	@RequestMapping(method = RequestMethod.PUT)
+	public ResponseEntity<?> updateLeave(@RequestBody LeavesDetails leavesDetails) {
+		try {
+			logger.info("+++++ Entry into updateLeave method in Rest +++++");
+			LeavesDetails leave= leaveService.updateLeave(leavesDetails);
+			logger.info("+++++ Exit from updateLeave method in Rest +++++");
+			return new ResponseEntity<ResponseObject<?>>(ResponseUtil.createSuccessResponse(leave), HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("Error in updating the leave:", e.getMessage());
+			return new ResponseEntity<ResponseObject<?>>(ResponseUtil.createErrorResponse(e.getMessage()),
+					HttpStatus.BAD_REQUEST);
+		}
+	}
+
 
 }

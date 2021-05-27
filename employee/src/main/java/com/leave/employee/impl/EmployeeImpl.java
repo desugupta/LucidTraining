@@ -26,30 +26,32 @@ public class EmployeeImpl implements EmployeeService {
 	@Override
 	public EmployeeUser saveEmployee(EmployeeUser employeeUser) {
 		try {
-			EmployeeUser employeeDetails = employeeRepository.findByEmployeeId(employeeUser.getEmployeeId());
-			String phoneNumber = employeeUser.getMobileNo();
-			if (!phoneNumber.startsWith("+91")) {
-				phoneNumber = "+91" + phoneNumber;
-			}
-			employeeDetails.setFirstName(employeeUser.getFirstName());
-			employeeDetails.setLastName(employeeUser.getLastName());
-			employeeDetails.setEmailId(employeeUser.getEmailId());
-			employeeDetails.setAge(employeeUser.getAge());
-			employeeDetails.setGender(employeeUser.getGender());
-			employeeDetails.setMobileNo(phoneNumber);
-			employeeDetails.setDob(employeeUser.getDob());
-			employeeDetails.setRoles(employeeUser.getRoles());
-			employeeDetails.setDepartment(employeeUser.getDepartment());
-			employeeDetails.setDesignation(employeeUser.getDesignation());
-			employeeDetails.setCountry(employeeUser.getCountry());
-			employeeDetails.setCity(employeeUser.getCity());
-			employeeDetails.setPincode(employeeUser.getPincode());
-			employeeDetails.setEmployeeStatus(employeeUser.getEmployeeStatus());
-			employeeDetails.setPermanentAddress(employeeUser.getPermanentAddress());
-			employeeDetails.setBloodGroup(employeeUser.getBloodGroup());
-			employeeDetails.setJoinDate(employeeUser.getJoinDate());
-			employeeDetails.setEndDate(employeeUser.getEndDate());
-			employeeDetails.setManagerEmpId(employeeUser.getManagerEmpId());
+			/*
+			 * // EmployeeUser employeeDetails =
+			 * employeeRepository.findByEmployeeId(employeeUser.getEmployeeId()); String
+			 * phoneNumber = employeeUser.getMobileNo(); if (!phoneNumber.startsWith("+91"))
+			 * { phoneNumber = "+91" + phoneNumber; }
+			 * employeeDetails.setFirstName(employeeUser.getFirstName());
+			 * employeeDetails.setLastName(employeeUser.getLastName());
+			 * employeeDetails.setEmailId(employeeUser.getEmailId());
+			 * employeeDetails.setAge(employeeUser.getAge());
+			 * employeeDetails.setGender(employeeUser.getGender());
+			 * employeeDetails.setMobileNo(phoneNumber);
+			 * employeeDetails.setDob(employeeUser.getDob());
+			 * employeeDetails.setRoles(employeeUser.getRoles());
+			 * employeeDetails.setDepartment(employeeUser.getDepartment());
+			 * employeeDetails.setDesignation(employeeUser.getDesignation());
+			 * employeeDetails.setCountry(employeeUser.getCountry());
+			 * employeeDetails.setCity(employeeUser.getCity());
+			 * employeeDetails.setPincode(employeeUser.getPincode());
+			 * employeeDetails.setEmployeeStatus(employeeUser.getEmployeeStatus());
+			 * employeeDetails.setPermanentAddress(employeeUser.getPermanentAddress());
+			 * employeeDetails.setBloodGroup(employeeUser.getBloodGroup());
+			 * employeeDetails.setJoinDate(employeeUser.getJoinDate());
+			 * employeeDetails.setEndDate(employeeUser.getEndDate());
+			 * employeeDetails.setManagerEmpId(employeeUser.getManagerEmpId());
+			 */
+			
 			return employeeRepository.save(employeeUser);
 		} catch (Exception e) {
 			logger.error("Error occurred while saving an employee:", e);

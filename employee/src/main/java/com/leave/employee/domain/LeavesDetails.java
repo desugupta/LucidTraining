@@ -1,10 +1,13 @@
 package com.leave.employee.domain;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.Data;
 
 @Document(collection = "LeaveDetails")
 public class LeavesDetails extends BaseDomain {
@@ -15,18 +18,18 @@ public class LeavesDetails extends BaseDomain {
 	private String id;
 	@Version
 	private Integer versionId;
-	private String employeeId;
-	private Date approvalDate;
-	private Date requestDate;
-	private Date leaveStartDate;
-	private Date leaveEndDate;
+	private Integer employeeId;
+	private LocalDate approvalDate;
+	private LocalDate requestDate;
+	private LocalDate leaveStartDate;
+	private LocalDate leaveEndDate;
 	private String leaveStatus;// (approved/rejected)
 	private String leaveType; // (EL,SL,LOP)
 	private String leaveDay;// (full or half)
 	private String leaveReason;
-	private String managerEmpId;
+	private Integer managerEmpId;
 	private String department;
-	private HolidaysList holidaysList;
+	private HolidayCollection holidaysList;
 
 	public String getId() {
 		return id;
@@ -44,43 +47,44 @@ public class LeavesDetails extends BaseDomain {
 		this.versionId = versionId;
 	}
 
-	public String getEmployeeId() {
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
 
-	public Date getApprovalDate() {
+	
+	public LocalDate getApprovalDate() {
 		return approvalDate;
 	}
 
-	public void setApprovalDate(Date approvalDate) {
+	public void setApprovalDate(LocalDate approvalDate) {
 		this.approvalDate = approvalDate;
 	}
 
-	public Date getRequestDate() {
+	public LocalDate getRequestDate() {
 		return requestDate;
 	}
 
-	public void setRequestDate(Date requestDate) {
+	public void setRequestDate(LocalDate requestDate) {
 		this.requestDate = requestDate;
 	}
 
-	public Date getLeaveStartDate() {
+	public LocalDate getLeaveStartDate() {
 		return leaveStartDate;
 	}
 
-	public void setLeaveStartDate(Date leaveStartDate) {
+	public void setLeaveStartDate(LocalDate leaveStartDate) {
 		this.leaveStartDate = leaveStartDate;
 	}
 
-	public Date getLeaveEndDate() {
+	public LocalDate getLeaveEndDate() {
 		return leaveEndDate;
 	}
 
-	public void setLeaveEndDate(Date leaveEndDate) {
+	public void setLeaveEndDate(LocalDate leaveEndDate) {
 		this.leaveEndDate = leaveEndDate;
 	}
 
@@ -116,11 +120,11 @@ public class LeavesDetails extends BaseDomain {
 		this.leaveReason = leaveReason;
 	}
 
-	public String getManagerEmpId() {
+	public Integer getManagerEmpId() {
 		return managerEmpId;
 	}
 
-	public void setManagerEmpId(String managerEmpId) {
+	public void setManagerEmpId(Integer managerEmpId) {
 		this.managerEmpId = managerEmpId;
 	}
 
@@ -132,13 +136,21 @@ public class LeavesDetails extends BaseDomain {
 		this.department = department;
 	}
 
+	public HolidayCollection getHolidaysList() {
+		return holidaysList;
+	}
+
+	public void setHolidaysList(HolidayCollection holidaysList) {
+		this.holidaysList = holidaysList;
+	}
+
 	@Override
 	public String toString() {
 		return "LeavesDetails [id=" + id + ", versionId=" + versionId + ", employeeId=" + employeeId + ", approvalDate="
 				+ approvalDate + ", requestDate=" + requestDate + ", leaveStartDate=" + leaveStartDate
 				+ ", leaveEndDate=" + leaveEndDate + ", leaveStatus=" + leaveStatus + ", leaveType=" + leaveType
 				+ ", leaveDay=" + leaveDay + ", leaveReason=" + leaveReason + ", managerEmpId=" + managerEmpId
-				+ ", department=" + department + "]";
+				+ ", department=" + department + ", holidaysList=" + holidaysList + "]";
 	}
 
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import com.leave.employee.domain.HolidaysList;
+import com.leave.employee.domain.HolidayCollection;
 import com.leave.employee.domain.ResponseObject;
 import com.leave.employee.service.HolidayService;
 import com.leave.employee.util.ResponseUtil;
@@ -21,17 +21,17 @@ public class HolidayController {
 	@Autowired
 	private HolidayService holidayService;
 	
-	private final Logger logger = LoggerFactory.getLogger(RolesRest.class);
+	private final Logger logger = LoggerFactory.getLogger(HolidayController.class);
 
 	/**
 	 * @author rajasekhar.d
 	 * @description To save the holiday details in the database
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> saveHoliday(@RequestBody HolidaysList holidaysList) {
+	public ResponseEntity<?> saveHoliday(@RequestBody HolidayCollection holidaysList) {
 		try {
 			logger.info("+++++ Entry into saveHoliday() method in Controller +++++");
-			HolidaysList holiday = holidayService.saveHolidayDate(holidaysList);
+			HolidayCollection holiday = holidayService.saveHolidayInformation(holidaysList);
 			logger.info("+++++ Exit from saveHoliday() method in Controller +++++");
 			return new ResponseEntity<ResponseObject<?>>(ResponseUtil.createSuccessResponse(holiday), HttpStatus.OK);
 		} catch (Exception e) {

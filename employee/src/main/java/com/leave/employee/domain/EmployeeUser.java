@@ -1,20 +1,19 @@
 package com.leave.employee.domain;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Document(collection = "Employee")
 public class EmployeeUser extends BaseDomain {
 
@@ -36,8 +35,8 @@ public class EmployeeUser extends BaseDomain {
 	private Integer age;
 	private String gender;
 	private String mobileNo;
-	private Date dob;
-	private List<Role> roles;
+	private Date dob;   	
+	private Set<Role> roles;
 	private String department;
 	private String designation;
 	private String country;
@@ -50,6 +49,18 @@ public class EmployeeUser extends BaseDomain {
 	private Date joinDate;
 	private Date endDate;
 	private Integer managerEmpId;
+
+	public EmployeeUser(String userName, String password, String firstName) {
+		super();
+		this.userName = userName;
+		this.password = password;
+		this.firstName = firstName;
+	}
+
+
+	public EmployeeUser() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getId() {
 		return id;
@@ -147,11 +158,11 @@ public class EmployeeUser extends BaseDomain {
 		this.dob = dob;
 	}
 
-	public List<Role> getRoles() {
+	public Set<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
 
@@ -252,6 +263,11 @@ public class EmployeeUser extends BaseDomain {
 				+ ", country=" + country + ", city=" + city + ", pincode=" + pincode + ", employeeStatus="
 				+ employeeStatus + ", permanentAddress=" + permanentAddress + ", bloodGroup=" + bloodGroup
 				+ ", joinDate=" + joinDate + ", endDate=" + endDate + ", managerEmpId=" + managerEmpId + "]";
+	}
+
+	public Object thenReturn(List<EmployeeUser> collect) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
