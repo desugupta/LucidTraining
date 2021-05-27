@@ -14,4 +14,11 @@ public class Constants {
 	public static final String nameRegex = "^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$";
 	public static final String INDIA_MOBILE_CODE = "+91";
 	public final static String SECRET_KEY = "secret";
+	public final static String APPROVED = "approved";
+	public final static String REJECTED = "rejected";
+	public final static String PENDING = "pending";
+	public final static String LOSS_OF_PAY = "lossOfPay";
+	
+
+
 }

@@ -1,10 +1,12 @@
 package com.leave.employee.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-import com.leave.employee.domain.HolidaysList;
+import com.leave.employee.domain.HolidayCollection;
 
-public interface HolidayRepository extends MongoRepository<HolidaysList, String>{
+@Repository
+public interface HolidayRepository extends MongoRepository<HolidayCollection, String>{
 	
 	
 

@@ -1,9 +1,9 @@
 package com.leave.employee.service;
 
-import com.leave.employee.domain.HolidaysList;
+import com.leave.employee.domain.HolidayCollection;
 
 public interface HolidayService {
 
-	public HolidaysList saveHolidayDate(HolidaysList holidaysList);
+	public HolidayCollection saveHolidayInformation(HolidayCollection holidaysList);
 
 }
