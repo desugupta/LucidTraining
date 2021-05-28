@@ -1,6 +1,7 @@
 package com.leave.employee.service;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import com.leave.employee.domain.LeavesDetails;
@@ -18,5 +19,7 @@ public interface LeaveService {
 	 * @description to generate csv for insurance
 	 */
 	Boolean generateCSVForAttendance();
+
+	public Boolean getAttendanceReport(Date startDate, Date endDate, Integer employeeId);
 
 }

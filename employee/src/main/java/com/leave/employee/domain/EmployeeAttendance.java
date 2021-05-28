@@ -15,12 +15,21 @@ public class EmployeeAttendance extends BaseDomain {
 	private String id;
 	@Version
 	private Integer versionId;
+	private Integer sno;
 	private Integer employeeId;
 	private Date normalDate;
 	private String timeIn;
 	private String timeOut;
 	private String workingHours;
 	private float working;
+
+	public Integer getSno() {
+		return sno;
+	}
+
+	public void setSno(Integer sno) {
+		this.sno = sno;
+	}
 
 	public float getWorking() {
 		return working;
@@ -100,8 +109,9 @@ public class EmployeeAttendance extends BaseDomain {
 
 	@Override
 	public String toString() {
-		return "EmployeeAttendance [id=" + id + ", versionId=" + versionId + ", employeeId=" + employeeId
-				+ ", normalDate=" + normalDate + ", timeIn=" + timeIn + ", timeOut=" + timeOut + ", workingHours="
-				+ workingHours + ", location=" + location + "]";
+		return "EmployeeAttendance [id=" + id + ", versionId=" + versionId + ", sno=" + sno + ", employeeId="
+				+ employeeId + ", normalDate=" + normalDate + ", timeIn=" + timeIn + ", timeOut=" + timeOut
+				+ ", workingHours=" + workingHours + ", working=" + working + ", location=" + location + "]";
 	}
+	
 }
