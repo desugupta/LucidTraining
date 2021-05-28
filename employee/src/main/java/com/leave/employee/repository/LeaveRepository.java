@@ -12,6 +12,8 @@ public interface LeaveRepository extends MongoRepository<LeavesDetails,String> {
 	
 	
 	public LeavesDetails findByManagerEmpId(Integer managerEmpId);
+
+	public LeavesDetails findByManagerEmpIdAndLeaveStatus(Integer managerEmpId,String leaveStatus);
 	
 
 }

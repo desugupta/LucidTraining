@@ -11,6 +11,8 @@ public interface LeaveStatisticsRepository extends MongoRepository<LeaveStatisti
 
 	LeaveStatistics findByEmployeeId(Integer employeeId);
 
+	void save(LeaveTypeBalance leaveType);
+
 	//LeaveStatistics save(LeaveTypeBalance leaveBalance);
 	
 	//LeaveStatistics save(LeaveStatistics leaveStatistics);
