@@ -1,5 +1,6 @@
-package com.leave.employee.controller;
 /*
+ * package com.leave.employee.controller;
+ * 
  * import java.io.IOException; import java.util.ArrayList; import
  * java.util.List;
  * 
@@ -26,62 +27,39 @@ package com.leave.employee.controller;
  * 
  * // write to csv file //
  * 
- * ICsvBeanWriter csvWriter = new
- * CsvBeanWriter(response.getWriter(),CsvPreference.STANDARD_PREFERENCE);
+ * ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(),
+ * CsvPreference.STANDARD_PREFERENCE);
  * 
- * 
- * String[] headings = {"First Name","Last Name","Email","Address"};
+ * String[] headings = { "First Name", "Last Name", "Email", "Address" };
  * 
  * String[] pojoclassPropertyName = { "firstName", "lastName", "email",
- * "address"};
- * 
+ * "address" };
  * 
  * csvWriter.writeHeader(headings);
  * 
- * List<User> userList =createUserData();
+ * List<User> userList = createUserData();
  * 
- * 
- * if(null!=userList && !userList.isEmpty()){ for (User user : userList) {
+ * if (null != userList && !userList.isEmpty()) { for (User user : userList) {
  * csvWriter.write(user, pojoclassPropertyName); } } csvWriter.close();
  * 
- * }catch(Exception e) { e.printStackTrace();
+ * } catch (Exception e) { e.printStackTrace();
  * 
  * } System.out.println("csv report downloaded successfully..........."); }
- * 
  * 
  * private List<User> createUserData() {
  * 
  * List<User> users = new ArrayList<User>(); users.add(new User("Lipsa",
- * "Patra", "BBSR","abc@gmail.com" )); users.add(new User("Ravish", "Sharma",
- * "Banglore","ravi@gmail.com")); users.add(new User("Julia", "Robert",
- * "Amsterdam","robert@gmail.com")); users.add(new User("Meghna", "Morkel",
- * "London","megha@gmail.com")); users.add(new User("Morish", "Harison",
- * "USA","mharison@yahoo.co.in")); return users; }
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
+ * "Patra", "BBSR", "abc@gmail.com")); users.add(new User("Ravish", "Sharma",
+ * "Banglore", "ravi@gmail.com")); users.add(new User("Julia", "Robert",
+ * "Amsterdam", "robert@gmail.com")); users.add(new User("Meghna", "Morkel",
+ * "London", "megha@gmail.com")); users.add(new User("Morish", "Harison", "USA",
+ * "mharison@yahoo.co.in")); return users; }
  * 
  * @GetMapping("/readCsv")
  * 
  * public @ResponseBody String readExcel() throws IOException {
  * 
- * String path = "C://Users//lipsa//Downloads//user.csv" ;
+ * String path = "C://Users//lipsa//Downloads//user.csv";
  * 
  * service.readDataFromCsv(path);
  * 

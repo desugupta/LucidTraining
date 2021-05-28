@@ -2,6 +2,7 @@ package com.leave.employee.impl;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -21,9 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +34,9 @@ import com.leave.employee.domain.LeaveTypeBalance;
 import com.leave.employee.domain.LeavesDetails;
 import com.leave.employee.exception.LeaveIsRejectedException;
 import com.leave.employee.exception.NoLeavesAvailableException;
+import com.leave.employee.model.AttendanceCsvResponse;
 import com.leave.employee.repository.AttendanceRepository;
+import com.leave.employee.repository.EmployeeAttendanceCustomRepository;
 import com.leave.employee.repository.EmployeeRepository;
 import com.leave.employee.repository.HolidayRepository;
 import com.leave.employee.repository.LeaveRepository;
@@ -65,6 +65,9 @@ public class LeavesImpl implements LeaveService {
 
 	@Autowired
 	private LeaveStatisticsRepository leaveStatisticsRepository;
+
+	@Autowired
+	private EmployeeAttendanceCustomRepository employeeAttendanceCustomRepository;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -102,6 +105,12 @@ public class LeavesImpl implements LeaveService {
 	public final static String SP_CODE = "SP Code";
 	public final static String DATE_PATTERN = "dd-MM-YYYY";
 	public final static String STATUS = "PAYMENT_COMPLETED";
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	private static final String SNO = "S.no";
+	private static final String EMPLOYEE_ID = "EmployeeId";
+	private static final String START_DATE = "StartDate";
+	private static final String END_DATE = "EndDate";
+	private static final String WORKING_HOURS = "WorkingHours";
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -288,8 +297,6 @@ public class LeavesImpl implements LeaveService {
 		return leaveObj;
 	}
 
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-
 	// @Scheduled(cron = "*/30 * * * * *")
 	public void performTaskUsingCron() {
 		System.out.println("Hello");
@@ -320,114 +327,49 @@ public class LeavesImpl implements LeaveService {
 		logger.info("hlki");
 	}
 
-	/**
-	 * @author Rajasekhar.D
-	 * @description to generate csv for insurance
-	 */
-	// @Scheduled(cron = "${app.iciciinsurance.icicicron}")
-//	@Scheduled(cron="*/5 * * * * *")
 	@Override
-	public Boolean generateCSVForAttendance() {
-		logger.info("++++++++++ Entry in generateCSV() ++++++++++");
+	public Boolean getAttendanceReport(Date startDate, Date endDate, Integer employeeId) {
 		String pattern = DATE_PATTERN;
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String fileDate = simpleDateFormat.format(new Date());
 		String fileName = "/temp/AttendanceInformationReport_" + fileDate + ".csv";
 		File file = new File(fileName);
 		try {
+			List<EmployeeAttendance> employeeAttendance = employeeAttendanceCustomRepository
+					.findEmpAttendanceRecords(startDate, endDate, employeeId);
+			float sum = 0;
+			for (EmployeeAttendance workingHours : employeeAttendance) {
+				float working = workingHours.getWorking();
+				sum = sum + working;
+			}
 			// create FileWriter object with file as parameter
 			FileWriter outputfile = new FileWriter(file);
 			// create CSVWriter object filewriter object as parameter
 			CSVWriter writer = new CSVWriter(outputfile);
-			Calendar after = Calendar.getInstance();
-			after.set(Calendar.DATE, (after.get(Calendar.DATE) - 1));
-			after.set(Calendar.HOUR_OF_DAY, 19);
-			after.set(Calendar.MINUTE, 0);
-			after.set(Calendar.SECOND, 0);
-			after.set(Calendar.MILLISECOND, 0);
-			// logger.debug("CreatedOn date after:{}", after.getTime());
-			Calendar before = Calendar.getInstance();
-			before.set(Calendar.DATE, (before.get(Calendar.DATE)));
-			before.set(Calendar.HOUR_OF_DAY, 19);
-			before.set(Calendar.MINUTE, 0);
-			before.set(Calendar.SECOND, 0);
-			before.set(Calendar.MILLISECOND, 0);
-			// logger.debug("CreatedOn date before:{}", before.getTime());
-			List<EmployeeAttendance> employeeAttendance = attendanceRepository.findBy;
-			Query query = new Query().addCriteria(Criteria.where("arrived").gte(startDate).lte(endDate));
-
-			// adding header to csv
-			String[] header = { APPLICATION_NO, APPLICANTS_NAME, INSURED_NAME, RELATIONSHIP, DATEOFBIRTH, SEX,
-					OOCUPATION_APPLICANT, MAILING_ADDRESS_FINAL, CITY_TOWN_VILLAGE, STATE, PINCODE, MOBILE_NUMBER,
-					AADHAR_NO, APPLICATION_NO_LAN_NO, POLICY_START_DATE_ENROLLMENT_DATE, PAN_DETAILS,
-					PREMIUM_RECEIVED_FROM_CUSTOMER, CP_COI_NO_ALTERNATE_POLICY_NO, EMAIL_ADDRESS, NOMINEE_NAME1,
-					NOMINEE_RELATIONSHIP_WITH_INSURED, PED_DETAILS, GSTIN_UIN_NO, RELATIONSHIP_MNGR_NAME_BANK,
-					SP_CODE };
+			String[] header = { SNO, EMPLOYEE_ID, START_DATE, END_DATE, WORKING_HOURS };
 
 			writer.writeNext(header);
+
+			AttendanceCsvResponse empAttendance = new AttendanceCsvResponse();
+			String sno = "1";
+			String employeeId1 = String.valueOf(employeeId);
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			String startDate1 = dateFormat.format(startDate);
+			String endDate1 = dateFormat.format(endDate);
+			String working1 = String.valueOf(sum);
+
+			empAttendance.setSno(sno);
+			empAttendance.setEmployeeId(employeeId1);
+			empAttendance.setStartDate(startDate1);
+			empAttendance.setEndDate(endDate1);
+			empAttendance.setWorking(working1);
 			// add data to csv
 			List<String[]> data = new ArrayList<String[]>();
-			for (ZoyloInsurance zoyloInsurance : zoyloInsurances) {
-
-				ICICIInfoMV iciciInfoMV = new ICICIInfoMV();
-				iciciInfoMV.setApplicationNo("");
-				iciciInfoMV.setName(zoyloInsurance.getRequesterInfo().getRequesterFullName());
-				// iciciInfoMV.getInsuredDetails().setFirstName("");
-				InsuredDetails insuredDetails = new InsuredDetails();
-				insuredDetails.setFirstName(zoyloInsurance.getInsuredDetails().getFirstName() + " "
-						+ zoyloInsurance.getInsuredDetails().getLastName());
-				insuredDetails.setRelationShip(zoyloInsurance.getRelationShip());
-				insuredDetails.setDateOfBirth(zoyloInsurance.getInsuredDetails().getDateOfBirth());
-				iciciInfoMV.setInsuredDetails(insuredDetails);
-				iciciInfoMV.setGender(zoyloInsurance.getGender());
-				iciciInfoMV.setOccupation("");
-				AddressInfo addressInfo = new AddressInfo();
-				addressInfo.setAddress(zoyloInsurance.getAddressInfo().getAddress());
-				addressInfo.setCity(zoyloInsurance.getAddressInfo().getCity());
-				addressInfo.setState(zoyloInsurance.getAddressInfo().getState());
-				addressInfo.setPinCode(zoyloInsurance.getAddressInfo().getPinCode());
-				iciciInfoMV.setAddressInfo(addressInfo);
-				iciciInfoMV.setPhoneNumber(zoyloInsurance.getPhoneNumber());
-				IndentificationInfo indentificationInfo = new IndentificationInfo();
-				indentificationInfo.setAadhar(zoyloInsurance.getIndentificationInfo().getAadhar());
-				iciciInfoMV.setLanNo("");
-				String enrollmentDate = simpleDateFormat.format(zoyloInsurance.getCreatedOn());
-				iciciInfoMV.setEnrollmentDate(enrollmentDate);
-				indentificationInfo.setPan(zoyloInsurance.getIndentificationInfo().getPan());
-				iciciInfoMV.setIndentificationInfo(indentificationInfo);
-				PremiumInfo premiumInfo = new PremiumInfo();
-				premiumInfo.setPremiumAmount(zoyloInsurance.getPremiumInfo().getPremiumAmount());
-				iciciInfoMV.setPremiumInfo(premiumInfo);
-				iciciInfoMV.setPolicyNum(zoyloInsurance.getCoiNumber());
-				iciciInfoMV.setEmailAddress(zoyloInsurance.getEmailAddress());
-				List<NomineeInfo> nomiList = new ArrayList<NomineeInfo>();
-				NomineeInfo nomineeInfo = new NomineeInfo();
-				nomineeInfo.setNomineeName(zoyloInsurance.getNomineeInfo().get(0).getNomineeName());
-				nomineeInfo.setRelationship(zoyloInsurance.getNomineeInfo().get(0).getRelationship());
-				nomiList.add(nomineeInfo);
-				iciciInfoMV.setNomineeInfo(nomiList);
-				iciciInfoMV.setPedDetails("");
-				iciciInfoMV.setUinNo("");
-				iciciInfoMV.setRelationshipManagerName("");
-				iciciInfoMV.setSpCode("");
-				data.add(new String[] { iciciInfoMV.getApplicationNo(), iciciInfoMV.getName(),
-						iciciInfoMV.getInsuredDetails().getFirstName(),
-						iciciInfoMV.getInsuredDetails().getRelationShip(),
-						iciciInfoMV.getInsuredDetails().getDateOfBirth().toString(), iciciInfoMV.getGender(),
-						iciciInfoMV.getOccupation(), iciciInfoMV.getAddressInfo().getAddress(),
-						iciciInfoMV.getAddressInfo().getCity(), iciciInfoMV.getAddressInfo().getState(),
-						iciciInfoMV.getAddressInfo().getPinCode(), iciciInfoMV.getPhoneNumber(),
-						iciciInfoMV.getIndentificationInfo().getAadhar(), iciciInfoMV.getLanNo(),
-						iciciInfoMV.getEnrollmentDate(), iciciInfoMV.getIndentificationInfo().getPan(),
-						iciciInfoMV.getPremiumInfo().getPremiumAmount().toString(), iciciInfoMV.getPolicyNum(),
-						iciciInfoMV.getEmailAddress(), iciciInfoMV.getNomineeInfo().get(0).getNomineeName(),
-						iciciInfoMV.getNomineeInfo().get(0).getRelationship(), iciciInfoMV.getPedDetails(),
-						iciciInfoMV.getUinNo(), iciciInfoMV.getRelationshipManagerName(), iciciInfoMV.getSpCode() });
-			}
-			// logger.debug("data :{}", data);
+			data.add(new String[] { empAttendance.getSno(), empAttendance.getEmployeeId(), empAttendance.getStartDate(),
+					empAttendance.getEndDate(), empAttendance.getWorking() });
 			writer.writeAll(data);
 			writer.close();
-			sendEmailForICICI(fileName);
+			// sendEmailForICICI(fileName);
 			// closing writer connection
 			logger.info("--------Exit from generateCSV()---------");
 			return Boolean.TRUE;
