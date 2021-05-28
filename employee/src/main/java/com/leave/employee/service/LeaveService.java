@@ -1,5 +1,6 @@
 package com.leave.employee.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import com.leave.employee.domain.LeavesDetails;
@@ -10,6 +11,12 @@ public interface LeaveService {
 
 	public LeavesDetails applyLeave(LeavesDetails leavesDetails);
 
-	public LeavesDetails updateLeave(LeavesDetails leavesDetails) throws NoLeavesAvailableException, LeaveIsRejectedException;
+	public LeavesDetails updateLeave(LeavesDetails leavesDetails) throws NoLeavesAvailableException, LeaveIsRejectedException, ParseException;
+
+	/**
+	 * @author Rajasekhar.D
+	 * @description to generate csv for insurance
+	 */
+	Boolean generateCSVForAttendance();
 
 }
