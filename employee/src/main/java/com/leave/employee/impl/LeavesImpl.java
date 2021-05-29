@@ -332,8 +332,10 @@ public class LeavesImpl implements LeaveService {
 		String pattern = DATE_PATTERN;
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String fileDate = simpleDateFormat.format(new Date());
-		String fileName = "/temp/AttendanceInformationReport_" + fileDate + ".csv";
+		String fileName = "C://Users//rajas//Downloads//user.csv";
 		File file = new File(fileName);
+		
+		
 		try {
 			List<EmployeeAttendance> employeeAttendance = employeeAttendanceCustomRepository
 					.findEmpAttendanceRecords(startDate, endDate, employeeId);

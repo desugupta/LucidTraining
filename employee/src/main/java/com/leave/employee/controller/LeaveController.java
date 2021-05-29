@@ -5,6 +5,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,8 +65,8 @@ public class LeaveController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<?> applyLeave(@RequestParam(value = "startDate", required = true) Date startDate,
-			@RequestParam(value = "endDate", required = true) Date endDate,
+	public ResponseEntity<?> applyLeave(@RequestParam(value = "startDate", required = true)@DateTimeFormat(pattern = "yyyy-MM-dd")  Date startDate  ,
+			@RequestParam(value = "endDate", required = true)@DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
 			@RequestParam(value = "employeeId", required = true) Integer employeeId) {
 		try {
 			logger.info("+++++ Entry into applyLeave() method in Controller +++++");
