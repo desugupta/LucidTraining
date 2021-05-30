@@ -21,6 +21,8 @@ public class EmployeeAttendance extends BaseDomain {
 	private String timeIn;
 	private String timeOut;
 	private float working;
+	private String location;
+
 
 	public Integer getSno() {
 		return sno;
@@ -37,10 +39,6 @@ public class EmployeeAttendance extends BaseDomain {
 	public void setWorking(float working) {
 		this.working = working;
 	}
-
-	// private String month;
-	private String location;// office
-	// private long attencount;
 
 	public String getId() {
 		return id;

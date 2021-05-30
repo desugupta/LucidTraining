@@ -24,7 +24,7 @@ public class EmailService {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom(emailFrom);
 	   // message.setTo(managerObj.getEmailId());
-	    message.setTo("desurajasekhargupta437@gmail.com");
+	    message.setTo(empObj.getManagerEmailId());
 		message.setSubject("Employee Leave Notification");
 		message.setText("Please approve or reject the leave of "+empObj.getUserName()+" for "+appliedLeaves+" days" );
 		javaMailSender.send(message);

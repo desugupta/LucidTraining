@@ -7,12 +7,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
@@ -22,10 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.leave.employee.config.Constants;
 import com.leave.employee.domain.EmployeeAttendance;
@@ -46,13 +40,12 @@ import com.leave.employee.repository.EmployeeRepository;
 import com.leave.employee.repository.HolidayRepository;
 import com.leave.employee.repository.LeaveRepository;
 import com.leave.employee.repository.LeaveStatisticsRepository;
-import com.leave.employee.repository.RoleRepository;
 import com.leave.employee.service.LeaveService;
 import com.opencsv.CSVWriter;
 
 @Service
 public class LeavesImpl implements LeaveService {
-
+		
 	@Autowired
 	private EmailService emailService;
 
@@ -82,21 +75,24 @@ public class LeavesImpl implements LeaveService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	/**
+	 * @author rajasekhar.d
+	 * @description to request for the leave by employee
+	 */
 	@Override
 	public LeavesDetails applyLeave(LeavesDetails leavesDetails) {
 		try {
 			EmployeeUser empObj = employeeRepository.findByEmployeeId(leavesDetails.getEmployeeId());
-			EmployeeUser managerObj = employeeRepository.findByEmployeeId(leavesDetails.getEmployeeId());
+			EmployeeUser managerObj = employeeRepository.findByEmployeeId(empObj.getManagerEmpId());
 			LeaveStatistics leaveStatistics = leaveStatisticsRepository.findByEmployeeId(empObj.getEmployeeId());
-			
-			if(leavesDetails.getLeaveStartDate().isAfter(leavesDetails.getLeaveEndDate())) {
+
+			if (leavesDetails.getLeaveStartDate().isAfter(leavesDetails.getLeaveEndDate())) {
 				logger.error("Appointment Start Date cannot be after Appointment EndDate");
-				throw new CustomParameterizedException(
-						RegisteredException.DATE_RANGE_INVALID_EXCEPTION.getException(),
+				throw new CustomParameterizedException(RegisteredException.DATE_RANGE_INVALID_EXCEPTION.getException(),
 						CustomExceptionCode.DATE_RANGE_EXCEPTION.getErrMsg(),
 						CustomExceptionCode.DATE_RANGE_EXCEPTION.getErrCode());
-			}			
-			
+			}
+
 			long numOfDays = ChronoUnit.DAYS.between(leavesDetails.getLeaveStartDate(), leavesDetails.getLeaveEndDate())
 					+ 1;
 			List<LocalDate> listOfDates = LongStream.range(0, numOfDays)
@@ -133,7 +129,7 @@ public class LeavesImpl implements LeaveService {
 			leaveObj.setLeaveType(leavesDetails.getLeaveType());
 			leaveObj.setLeaveDay(leavesDetails.getLeaveDay());
 			leaveObj.setLeaveReason(leavesDetails.getLeaveReason());
-			leaveObj.setManagerEmpId(leavesDetails.getManagerEmpId());
+			leaveObj.setManagerEmpId(managerObj.getEmployeeId());
 			leaveObj.setDepartment(empObj.getDepartment());
 			leaveObj = leaveRepository.save(leaveObj);
 			leaveObj = modelMapper.map(leaveObj, LeavesDetails.class);
@@ -144,13 +140,17 @@ public class LeavesImpl implements LeaveService {
 		}
 	}
 
+	/**
+	 * @author rajasekhar.d
+	 * @description to approve the leave request by the manager
+	 */
 	@Override
 	public LeavesDetails updateLeave(LeavesDetails leavesDetails)
 			throws NoLeavesAvailableException, LeaveIsRejectedException, ParseException {
 		EmployeeUser empObj = employeeRepository.findByEmployeeId(leavesDetails.getEmployeeId());
-		EmployeeUser managerObj = employeeRepository.findByEmployeeId(leavesDetails.getEmployeeId());
+		EmployeeUser managerObj = employeeRepository.findByEmployeeId(empObj.getManagerEmpId());
 		LeaveStatistics leaveStatistics = leaveStatisticsRepository.findByEmployeeId(empObj.getEmployeeId());
-		LeavesDetails leaveObj = leaveRepository.findByManagerEmpIdAndLeaveStatus(leavesDetails.getManagerEmpId(),
+		LeavesDetails leaveObj = leaveRepository.findByManagerEmpIdAndLeaveStatus(empObj.getManagerEmpId(),
 				Constants.PENDING);
 
 		long numOfDays = ChronoUnit.DAYS.between(leaveObj.getLeaveStartDate(), leaveObj.getLeaveEndDate()) + 1;
@@ -175,12 +175,12 @@ public class LeavesImpl implements LeaveService {
 
 		System.out.println(differences);
 		double appliedLeaves = differences.size();
-		if (leavesDetails.getLeaveDay().equalsIgnoreCase(Constants.HALF)) {
+		if (leaveObj.getLeaveDay().equalsIgnoreCase(Constants.HALF)) {
 			appliedLeaves = appliedLeaves - 0.5;
 		}
 
 		for (LeaveTypeBalance leaveBalance : leaveStatistics.getLeaveTypeBalance()) {
-			if (leavesDetails.getLeaveType().equals(leaveBalance.getLeaveType())) {
+			if (leaveObj.getLeaveType().equals(leaveBalance.getLeaveType())) {
 				double noOfLeavesAvailable = leaveBalance.getNoOfDays();
 				if (noOfLeavesAvailable >= appliedLeaves) {
 					if (leavesDetails.getLeaveStatus().equalsIgnoreCase(Constants.APPROVED)) {
@@ -213,7 +213,7 @@ public class LeavesImpl implements LeaveService {
 						throw new LeaveIsRejectedException("Leave is Rejected");
 					}
 				} else {
-					if (leavesDetails.getLeaveStatus().equalsIgnoreCase(Constants.APPROVED)) {
+					if (leaveObj.getLeaveStatus().equalsIgnoreCase(Constants.APPROVED)) {
 						leaveObj.setApprovalDate(LocalDate.now());
 						leaveObj.setLeaveStatus(leavesDetails.getLeaveStatus());
 						double count = 0;
@@ -238,8 +238,8 @@ public class LeavesImpl implements LeaveService {
 		return leaveObj;
 	}
 
-//	@Scheduled(cron="0 0 1 */6 *")
-	// @Scheduled(cron="*/15 * * * * *")
+	// @Scheduled(cron="0 0 1 */6 *") cron job for every 6 months
+	// @Scheduled(cron="*/15 * * * * *")cron job for every 15 seconds
 	public void performTaskUsingCron() {
 		System.out.println("Hello");
 		List<LeaveStatistics> leaveStatistics = leaveStatisticsRepository.findAll();
@@ -262,6 +262,11 @@ public class LeavesImpl implements LeaveService {
 		}
 	}
 
+	/**
+	 * @author rajasekhar.d
+	 * @description to get the employee attendance report by giving employeeId,start
+	 *              and endDate
+	 */
 	@Override
 	public Boolean getAttendanceReport(Date startDate, Date endDate, Integer employeeId) {
 		String pattern = Constants.DATE_PATTERN;
@@ -312,4 +317,15 @@ public class LeavesImpl implements LeaveService {
 		return Boolean.FALSE;
 	}
 
+	@Override
+	public LeaveStatistics saveLeaveStatistics(LeaveStatistics leaveStatistics) {
+		try {
+			LeaveStatistics leaveStatisticsObj = new LeaveStatistics();
+			leaveStatisticsObj = leaveStatisticsRepository.save(leaveStatistics);
+			return leaveStatisticsObj;
+		} catch (Exception e) {
+			logger.error("Error occurred while saving the leave balance of an employee:", e);
+			throw e;
+		}
+	}
 }

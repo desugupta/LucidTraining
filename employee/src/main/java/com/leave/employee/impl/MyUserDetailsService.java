@@ -1,6 +1,5 @@
 package com.leave.employee.impl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +20,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository; 
-	
+		
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -36,7 +35,7 @@ public class MyUserDetailsService implements UserDetailsService {
 		String password = foundedUser.getPassword();
 		return new User(name, password, getAuthority(foundedUser));
 	}
-	
+		
 	private Set getAuthority(EmployeeUser user) {
         Set authorities = new HashSet<>();
 		user.getRoles().forEach(role -> {
@@ -44,50 +43,5 @@ public class MyUserDetailsService implements UserDetailsService {
 		});
 		return authorities;
 	}
-    /*
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserModel> user = userRepository.findByUserName(username);
-        return user.map(GroupUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException(username + " Not Found"));
-    }
-    */
 
 }
-
-/*
- * @Service(value = "userService") public class UserServiceImpl implements
- * UserDetailsService, UserService {
- * 
- * @Autowired private UserDao userDao;
- * 
- * @Autowired private BCryptPasswordEncoder bcryptEncoder;
- * 
- * public UserDetails loadUserByUsername(String username) throws
- * UsernameNotFoundException { User user = userDao.findByUsername(username);
- * if(user == null){ throw new
- * UsernameNotFoundException("Invalid username or password."); } return new
- * org.springframework.security.core.userdetails.User(user.getUsername(),
- * user.getPassword(), getAuthority(user)); }
- * 
- * private Set getAuthority(User user) { Set authorities = new HashSet<>();
- * user.getRoles().forEach(role -> { authorities.add(new
- * SimpleGrantedAuthority("ROLE_" + role.getName())); }); return authorities; }
- * 
- * public List findAll() { List list = new ArrayList<>();
- * userDao.findAll().iterator().forEachRemaining(list::add); return list; }
- * 
- * @Override public void delete(long id) { userDao.deleteById(id); }
- * 
- * @Override public User findOne(String username) { return
- * userDao.findByUsername(username); }
- * 
- * @Override public User findById(Long id) { return userDao.findById(id).get();
- * }
- * 
- * @Override public User save(UserDto user) { User newUser = new User();
- * newUser.setUsername(user.getUsername());
- * newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
- * newUser.setAge(user.getAge()); newUser.setSalary(user.getSalary()); return
- * userDao.save(newUser); } }
- */

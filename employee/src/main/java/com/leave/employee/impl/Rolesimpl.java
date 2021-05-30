@@ -2,12 +2,12 @@ package com.leave.employee.impl;
 
 import java.util.List;
 import java.util.Random;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import com.leave.employee.domain.Role;
 import com.leave.employee.repository.RoleRepository;
@@ -17,7 +17,7 @@ import com.leave.employee.service.RoleService;
 public class Rolesimpl implements RoleService {
 
 	@Autowired
-	private ModelMapper modelMapper;
+	private ModelMapper modelMapper;	
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -27,7 +27,6 @@ public class Rolesimpl implements RoleService {
 	@Override
 	public Role saveRole(Role role) {
 		try {
-			logger.info("dasdd");
 			Role roleObj = new Role();
 			String roleId = Integer.toString(generateRandomnumber());
 			if (role.getRoleName() != null && !role.getRoleName().isEmpty()) {
@@ -52,9 +51,9 @@ public class Rolesimpl implements RoleService {
 	}
 
 	@Override
-	public Role updateRole(Role role) {
+	public Role updateRole(Role role,String roleId) {
 		try {
-			Role roleObj = roleRepository.findByRoleId(role.getRoleId());
+			Role roleObj = roleRepository.findByRoleId(roleId);
 			if (roleObj.getRoleId() != null && !roleObj.getRoleId().isEmpty()) {
 				roleObj.setRoleId(role.getRoleId());
 			}

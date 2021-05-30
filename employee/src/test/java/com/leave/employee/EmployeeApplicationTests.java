@@ -41,15 +41,24 @@ class EmployeeApplicationTests {
 
 	@Test
 	public void addUser() {
-
 		EmployeeUser empUser = new EmployeeUser();
-
 		empUser.setUserName("raja");
 		when(employeeRepository.save(empUser)).thenReturn(empUser);
 		EmployeeUser userResponse = employeeImpl.saveEmployee(empUser);
 		assertEquals(empUser, employeeImpl.saveEmployee(empUser));
 	}
 
+	@Test
+	public void updateUser() throws Exception {
+		EmployeeUser empUser=new EmployeeUser();
+		empUser.setEmployeeId(25);
+		empUser.setEmailId("desugupta@gmail.com");
+		when(employeeRepository.findByEmployeeId(empUser.getEmployeeId())).thenReturn(empUser);
+		assertEquals(empUser.getEmailId(), employeeImpl.updateEmployee(empUser).getEmailId());		
+	}
+	
+	
+	
 	/*
 	 * @Test public void getEmployee() {
 	 * 

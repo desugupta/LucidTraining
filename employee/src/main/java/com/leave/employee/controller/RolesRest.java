@@ -47,11 +47,11 @@ public class RolesRest {
 	 * @author rajasekhar.d
 	 * @description to update the role
 	 */
-	@RequestMapping(method = RequestMethod.PUT)
-	public ResponseEntity<?> updateRole(@RequestBody Role role) {
+	@RequestMapping(value = "/{roleId}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateRole(@RequestBody Role role,@PathVariable("roleId") String roleId) {
 		try {
 			logger.info("+++++ Entry into updateRole method in Rest +++++");
-			Role roles = roleService.updateRole(role);
+			Role roles = roleService.updateRole(role,roleId);
 			logger.info("+++++ Exit from updateRole method in Rest +++++");
 			return new ResponseEntity<ResponseObject<?>>(ResponseUtil.createSuccessResponse(roles), HttpStatus.OK);
 		} catch (Exception e) {

@@ -29,9 +29,7 @@ public class HolidaysListImpl implements HolidayService {
 			HolidayCollection holidayObj = new HolidayCollection();
 			holidayObj.setHolidayYear(holidaysList.getHolidayYear());
 			holidayObj.setHolidayId(holidaysList.getHolidayId());
-		//	holidayObj.setHolidayDate(holidaysList.getHolidayDate());
-			holidayObj.setHoliday(holidaysList.getHoliday());
-
+			holidayObj.setHoliday(holidaysList.getHoliday());//holidayDate
 			holidayObj.setReason(holidaysList.getReason());
 			holidayObj = holidayRepository.save(holidayObj);
 			return holidayObj;
@@ -41,7 +39,5 @@ public class HolidaysListImpl implements HolidayService {
 			throw e;
 		}
 	}
-	
-	
 
 }

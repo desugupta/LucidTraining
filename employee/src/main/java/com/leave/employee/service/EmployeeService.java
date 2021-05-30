@@ -10,8 +10,8 @@ public interface EmployeeService {
 
 	public List<EmployeeUser> getAllEmployees();
 	
-	public EmployeeUser getEmployee(int employeeId);
+	public EmployeeUser getEmployee(int employeeId) throws Exception;
 
-	public EmployeeUser updateEmployee(EmployeeUser employeeUser);
+	public EmployeeUser updateEmployee(EmployeeUser employeeUser) throws Exception;
 
 }
