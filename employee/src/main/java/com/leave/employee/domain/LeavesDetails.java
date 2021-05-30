@@ -1,13 +1,9 @@
 package com.leave.employee.domain;
 
 import java.time.LocalDate;
-import java.util.Date;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import lombok.Data;
 
 @Document(collection = "LeaveDetails")
 public class LeavesDetails extends BaseDomain {
@@ -29,7 +25,6 @@ public class LeavesDetails extends BaseDomain {
 	private String leaveReason;
 	private Integer managerEmpId;
 	private String department;
-	private HolidayCollection holidaysList;
 
 	public String getId() {
 		return id;
@@ -55,7 +50,6 @@ public class LeavesDetails extends BaseDomain {
 		this.employeeId = employeeId;
 	}
 
-	
 	public LocalDate getApprovalDate() {
 		return approvalDate;
 	}
@@ -136,21 +130,13 @@ public class LeavesDetails extends BaseDomain {
 		this.department = department;
 	}
 
-	public HolidayCollection getHolidaysList() {
-		return holidaysList;
-	}
-
-	public void setHolidaysList(HolidayCollection holidaysList) {
-		this.holidaysList = holidaysList;
-	}
-
 	@Override
 	public String toString() {
 		return "LeavesDetails [id=" + id + ", versionId=" + versionId + ", employeeId=" + employeeId + ", approvalDate="
 				+ approvalDate + ", requestDate=" + requestDate + ", leaveStartDate=" + leaveStartDate
 				+ ", leaveEndDate=" + leaveEndDate + ", leaveStatus=" + leaveStatus + ", leaveType=" + leaveType
 				+ ", leaveDay=" + leaveDay + ", leaveReason=" + leaveReason + ", managerEmpId=" + managerEmpId
-				+ ", department=" + department + ", holidaysList=" + holidaysList + "]";
+				+ ", department=" + department + "]";
 	}
 
 }

@@ -1,7 +1,5 @@
 package com.leave.employee.model;
 
-import java.util.Date;
-
 public class AttendanceCsvResponse {
 
 	private String sno;

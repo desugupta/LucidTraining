@@ -20,7 +20,6 @@ public class EmployeeAttendance extends BaseDomain {
 	private Date normalDate;
 	private String timeIn;
 	private String timeOut;
-	private String workingHours;
 	private float working;
 
 	public Integer getSno() {
@@ -91,14 +90,6 @@ public class EmployeeAttendance extends BaseDomain {
 		this.timeOut = timeOut;
 	}
 
-	public String getWorkingHours() {
-		return workingHours;
-	}
-
-	public void setWorkingHours(String workingHours) {
-		this.workingHours = workingHours;
-	}
-
 	public String getLocation() {
 		return location;
 	}
@@ -111,7 +102,7 @@ public class EmployeeAttendance extends BaseDomain {
 	public String toString() {
 		return "EmployeeAttendance [id=" + id + ", versionId=" + versionId + ", sno=" + sno + ", employeeId="
 				+ employeeId + ", normalDate=" + normalDate + ", timeIn=" + timeIn + ", timeOut=" + timeOut
-				+ ", workingHours=" + workingHours + ", working=" + working + ", location=" + location + "]";
+				+ ", working=" + working + ", location=" + location + "]";
 	}
 	
 }

@@ -21,7 +21,9 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,45 +74,8 @@ public class LeavesImpl implements LeaveService {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	@Autowired
-	private MongoTemplate mongoTemplate;
-
-	@Autowired
-	private RoleRepository roleRepository;
-
-	public final static String APPLICATION_NO = "Application No";
-	public final static String APPLICANTS_NAME = "Applicant's Name";
-	public final static String INSURED_NAME = "Insured Name";
-	public final static String RELATIONSHIP = "Relationship of Insured with Applicant";
-	public final static String DATEOFBIRTH = "DateOfBirth";
-	public final static String SEX = "Sex";
-	public final static String OOCUPATION_APPLICANT = "Occupation(Applicant)";
-	public final static String MAILING_ADDRESS_FINAL = "Mailing Address Final";
-	public final static String CITY_TOWN_VILLAGE = "City/Town/Village";
-	public final static String STATE = "State";
-	public final static String PINCODE = "PinCode";
-	public final static String MOBILE_NUMBER = "Mobile Number";
-	public final static String AADHAR_NO = "Aadhar No";
-	public final static String APPLICATION_NO_LAN_NO = "Application No/Lan No";
-	public final static String POLICY_START_DATE_ENROLLMENT_DATE = "Policy Start Date/Enrollment Date";
-	public final static String PAN_DETAILS = "Pan Details";
-	public final static String PREMIUM_RECEIVED_FROM_CUSTOMER = "Premium Received From Customer";
-	public final static String CP_COI_NO_ALTERNATE_POLICY_NO = "COI No";
-	public final static String EMAIL_ADDRESS = "Email address";
-	public final static String NOMINEE_NAME1 = "Nominee Name1";
-	public final static String NOMINEE_RELATIONSHIP_WITH_INSURED = "Nominee Relationship with Insured";
-	public final static String PED_DETAILS = "PED Details";
-	public final static String GSTIN_UIN_NO = "GSTIN/UIN No";
-	public final static String RELATIONSHIP_MNGR_NAME_BANK = "RELATIONSHIP_MNGR_NAME(bank)";
-	public final static String SP_CODE = "SP Code";
-	public final static String DATE_PATTERN = "dd-MM-YYYY";
-	public final static String STATUS = "PAYMENT_COMPLETED";
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-	private static final String SNO = "S.no";
-	private static final String EMPLOYEE_ID = "EmployeeId";
-	private static final String START_DATE = "StartDate";
-	private static final String END_DATE = "EndDate";
-	private static final String WORKING_HOURS = "WorkingHours";
+	@Value("${filepath}")
+	private String filepath;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -118,21 +83,20 @@ public class LeavesImpl implements LeaveService {
 	public LeavesDetails applyLeave(LeavesDetails leavesDetails) {
 		try {
 			EmployeeUser empObj = employeeRepository.findByEmployeeId(leavesDetails.getEmployeeId());
+			EmployeeUser managerObj = employeeRepository.findByEmployeeId(leavesDetails.getEmployeeId());
+			LeaveStatistics leaveStatistics = leaveStatisticsRepository.findByEmployeeId(empObj.getEmployeeId());
 
-			LeaveStatistics leaveStatistics = leaveStatisticsRepository.findByEmployeeId(leavesDetails.getEmployeeId());
 			long numOfDays = ChronoUnit.DAYS.between(leavesDetails.getLeaveStartDate(), leavesDetails.getLeaveEndDate())
 					+ 1;
-
 			List<LocalDate> listOfDates = LongStream.range(0, numOfDays)
 					.mapToObj(leavesDetails.getLeaveStartDate()::plusDays).collect(Collectors.toList());
+
 			List<LocalDate> finalHolidays = new ArrayList<LocalDate>();
 			List<LocalDate> finalHol = new ArrayList<LocalDate>();
 
 			List<HolidayCollection> holidaysDb = holidayRepository.findAll();
-
 			for (HolidayCollection hol : holidaysDb) {
 				finalHol.add(hol.getHoliday());
-
 			}
 
 			for (LocalDate listDates : listOfDates) {
@@ -140,23 +104,15 @@ public class LeavesImpl implements LeaveService {
 					finalHolidays.add(listDates);
 				}
 			}
+			List<LocalDate> differences = new ArrayList<>(finalHolidays);
+			differences.removeAll(finalHol);
 
-			Iterator<LocalDate> itr = finalHolidays.iterator();
-			while (itr.hasNext()) {
-				LocalDate date = itr.next();
-
-				Iterator<LocalDate> itr1 = finalHol.iterator();
-				while (itr1.hasNext()) {
-
-					LocalDate date1 = itr1.next();
-					if (date.equals(date1)) {
-						itr.remove();
-
-					}
-				}
+			System.out.println(differences);
+			double appliedLeaves = differences.size();
+			if (leavesDetails.getLeaveDay().equalsIgnoreCase(Constants.HALF)) {
+				appliedLeaves = appliedLeaves - 0.5;
 			}
-			System.out.println(finalHolidays);
-			// if(leaveStatistics.getLeaveTypeBalance().getfinalHolidays.size())
+			emailService.sendEmail(managerObj, empObj, appliedLeaves);
 			LeavesDetails leaveObj = new LeavesDetails();
 			leaveObj.setEmployeeId(leavesDetails.getEmployeeId());
 			leaveObj.setRequestDate(LocalDate.now());
@@ -166,7 +122,7 @@ public class LeavesImpl implements LeaveService {
 			leaveObj.setLeaveType(leavesDetails.getLeaveType());
 			leaveObj.setLeaveDay(leavesDetails.getLeaveDay());
 			leaveObj.setLeaveReason(leavesDetails.getLeaveReason());
-			leaveObj.setManagerEmpId(empObj.getManagerEmpId());
+			leaveObj.setManagerEmpId(leavesDetails.getManagerEmpId());
 			leaveObj.setDepartment(empObj.getDepartment());
 			leaveObj = leaveRepository.save(leaveObj);
 			leaveObj = modelMapper.map(leaveObj, LeavesDetails.class);
@@ -177,13 +133,6 @@ public class LeavesImpl implements LeaveService {
 		}
 	}
 
-	public static void main(String args[]) {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDate now = LocalDate.now();
-		System.out.println(dtf.format(now));
-	}
-
-	@Transactional
 	@Override
 	public LeavesDetails updateLeave(LeavesDetails leavesDetails)
 			throws NoLeavesAvailableException, LeaveIsRejectedException, ParseException {
@@ -205,32 +154,19 @@ public class LeavesImpl implements LeaveService {
 		for (HolidayCollection hol : holidaysDb) {
 			finalHol.add(hol.getHoliday());
 		}
-
 		for (LocalDate listDates : listOfDates) {
 			if (listDates.getDayOfWeek() != DayOfWeek.SATURDAY && listDates.getDayOfWeek() != DayOfWeek.SUNDAY) {
 				finalHolidays.add(listDates);
 			}
 		}
+		List<LocalDate> differences = new ArrayList<>(finalHolidays);
+		differences.removeAll(finalHol);
 
-		Iterator<LocalDate> itr = finalHolidays.iterator();
-		while (itr.hasNext()) {
-			LocalDate date = itr.next();
-			Iterator<LocalDate> itr1 = finalHol.iterator();
-			while (itr1.hasNext()) {
-				LocalDate date1 = itr1.next();
-				if (date.equals(date1)) {
-					itr.remove();
-				}
-			}
-		}
-		System.out.println(finalHolidays);
-		double appliedLeaves = finalHolidays.size();
-		if (leavesDetails.getLeaveDay().equalsIgnoreCase("Half")) {
+		System.out.println(differences);
+		double appliedLeaves = differences.size();
+		if (leavesDetails.getLeaveDay().equalsIgnoreCase(Constants.HALF)) {
 			appliedLeaves = appliedLeaves - 0.5;
 		}
-
-		// double noOfLeavesAvailable =
-		// leaveStatistics.getLeaveTypeBalance().get.getNoOfDays();
 
 		for (LeaveTypeBalance leaveBalance : leaveStatistics.getLeaveTypeBalance()) {
 			if (leavesDetails.getLeaveType().equals(leaveBalance.getLeaveType())) {
@@ -239,25 +175,21 @@ public class LeavesImpl implements LeaveService {
 					if (leavesDetails.getLeaveStatus().equalsIgnoreCase(Constants.APPROVED)) {
 						leaveObj.setApprovalDate(LocalDate.now());
 						leaveObj.setLeaveStatus(leavesDetails.getLeaveStatus());
-						// leaveObj.setRequestDate(LocalDate.now());
 						double finalLeaveBalance = leaveBalance.getNoOfDays() - appliedLeaves;
-						// leaveBalance.setNoOfDays(finalLeaveBalance);
-						if (leavesDetails.getLeaveType().equalsIgnoreCase("earnedLeave")) {
-							leaveStatistics.getLeaveTypeBalance().get(0).setNoOfDays(finalLeaveBalance);
-						} else {
-							leaveStatistics.getLeaveTypeBalance().get(1).setNoOfDays(finalLeaveBalance);
+						for (int i = 0; i < leaveStatistics.getLeaveTypeBalance().size(); i++) {
+							if (leaveStatistics.getLeaveTypeBalance().get(i).getLeaveType()
+									.equalsIgnoreCase(leaveObj.getLeaveType())) {
+								leaveStatistics.getLeaveTypeBalance().get(i).setNoOfDays(finalLeaveBalance);
+							}
 						}
 						leaveStatisticsRepository.save(leaveStatistics);
 						leaveObj = leaveRepository.save(leaveObj);
 						leaveObj = modelMapper.map(leaveObj, LeavesDetails.class);
-
-						for (LocalDate leaveApprovedDates : finalHolidays) {
-							String unDATE = leaveApprovedDates.toString();
-
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-							Date date1 = formatter.parse(unDATE);
+						for (LocalDate leaveApprovedDates : differences) {
+							String date = leaveApprovedDates.toString();
+							SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_PATTERN);
+							Date date1 = formatter.parse(date);
 							EmployeeAttendance empAttObj = new EmployeeAttendance();
-
 							empAttObj.setEmployeeId(empObj.getEmployeeId());
 							empAttObj.setNormalDate(date1);
 							empAttObj.setTimeIn("");
@@ -265,9 +197,7 @@ public class LeavesImpl implements LeaveService {
 							empAttObj.setWorking(8);
 							empAttObj.setLocation("null");
 							empAttObj = attendanceRepository.save(empAttObj);
-
 						}
-						// emailService.sendEmail(empObj, appliedLeaves);
 					} else {
 						throw new LeaveIsRejectedException("Leave is Rejected");
 					}
@@ -277,17 +207,17 @@ public class LeavesImpl implements LeaveService {
 						leaveObj.setLeaveStatus(leavesDetails.getLeaveStatus());
 						double count = 0;
 						count = appliedLeaves;
-						leaveBalance.getLeaveType().equalsIgnoreCase(Constants.LOSS_OF_PAY);
-						double lossOfPayCount = leaveStatistics.getLeaveTypeBalance().get(2).getNoOfDays();
-						lossOfPayCount = count + lossOfPayCount;
-						leaveStatistics.getLeaveTypeBalance().get(2).setNoOfDays(lossOfPayCount);
+						for (int i = 0; i < leaveStatistics.getLeaveTypeBalance().size(); i++) {
+							if (leaveStatistics.getLeaveTypeBalance().get(i).getLeaveType()
+									.equalsIgnoreCase(Constants.LOSS_OF_PAY)) {
+								double lossOfPayCount = leaveStatistics.getLeaveTypeBalance().get(i).getNoOfDays();
+								leaveStatistics.getLeaveTypeBalance().get(i)
+										.setNoOfDays(appliedLeaves + lossOfPayCount);
+							}
+						}
 						leaveStatisticsRepository.save(leaveStatistics);
 						leaveObj = leaveRepository.save(leaveObj);
 						leaveObj = modelMapper.map(leaveObj, LeavesDetails.class);
-						// emailService.sendEmaiTemplate(empObj, appliedLeaves, managerObj, leaveObj);
-
-						// throw new NoLeavesAvailableException("Leaves applied type are not
-						// available");
 					} else {
 						throw new LeaveIsRejectedException("Leave is Rejected");
 					}
@@ -297,20 +227,20 @@ public class LeavesImpl implements LeaveService {
 		return leaveObj;
 	}
 
-	// @Scheduled(cron = "*/30 * * * * *")
+//	@Scheduled(cron="0 0 1 */6 *")
+	// @Scheduled(cron="*/15 * * * * *")
 	public void performTaskUsingCron() {
 		System.out.println("Hello");
 		List<LeaveStatistics> leaveStatistics = leaveStatisticsRepository.findAll();
 		for (LeaveStatistics leaveBalance : leaveStatistics) {
 			for (LeaveTypeBalance leaveBalance1 : leaveBalance.getLeaveTypeBalance()) {
-				if (leaveBalance1.getLeaveType().equalsIgnoreCase("earnedLeave")) {
+				if (leaveBalance1.getLeaveType().equalsIgnoreCase(Constants.EARNED_LEAVE)) {
 					double noOfLeavesAvailable = leaveBalance1.getNoOfDays();
 					noOfLeavesAvailable = noOfLeavesAvailable + 12;
 					leaveBalance.getLeaveTypeBalance().get(0).setNoOfDays(noOfLeavesAvailable);
 					leaveStatisticsRepository.save(leaveBalance);
 				} else {
-					if (leaveBalance1.getLeaveType().equalsIgnoreCase("sickLeave")) {
-
+					if (leaveBalance1.getLeaveType().equalsIgnoreCase(Constants.SICK_LEAVE)) {
 						double noOfLeavesAvailable = leaveBalance1.getNoOfDays();
 						noOfLeavesAvailable = noOfLeavesAvailable + 3;
 						leaveBalance.getLeaveTypeBalance().get(1).setNoOfDays(noOfLeavesAvailable);
@@ -321,21 +251,13 @@ public class LeavesImpl implements LeaveService {
 		}
 	}
 
-	// @Scheduled(cron="*/5 * * * * *")
-	public void performTaskUsingCron1() {
-		System.out.println("Regular task performed using Cron at " + dateFormat.format(new Date()));
-		logger.info("hlki");
-	}
-
 	@Override
 	public Boolean getAttendanceReport(Date startDate, Date endDate, Integer employeeId) {
-		String pattern = DATE_PATTERN;
+		String pattern = Constants.DATE_PATTERN;
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String fileDate = simpleDateFormat.format(new Date());
-		String fileName = "C://Users//rajas//Downloads//user.csv";
+		String fileName = filepath + fileDate + ".csv";
 		File file = new File(fileName);
-		
-		
 		try {
 			List<EmployeeAttendance> employeeAttendance = employeeAttendanceCustomRepository
 					.findEmpAttendanceRecords(startDate, endDate, employeeId);
@@ -348,10 +270,9 @@ public class LeavesImpl implements LeaveService {
 			FileWriter outputfile = new FileWriter(file);
 			// create CSVWriter object filewriter object as parameter
 			CSVWriter writer = new CSVWriter(outputfile);
-			String[] header = { SNO, EMPLOYEE_ID, START_DATE, END_DATE, WORKING_HOURS };
-
+			String[] header = { Constants.SNO, Constants.EMPLOYEE_ID, Constants.START_DATE, Constants.END_DATE,
+					Constants.WORKING_HOURS };
 			writer.writeNext(header);
-
 			AttendanceCsvResponse empAttendance = new AttendanceCsvResponse();
 			String sno = "1";
 			String employeeId1 = String.valueOf(employeeId);
@@ -371,7 +292,6 @@ public class LeavesImpl implements LeaveService {
 					empAttendance.getEndDate(), empAttendance.getWorking() });
 			writer.writeAll(data);
 			writer.close();
-			// sendEmailForICICI(fileName);
 			// closing writer connection
 			logger.info("--------Exit from generateCSV()---------");
 			return Boolean.TRUE;

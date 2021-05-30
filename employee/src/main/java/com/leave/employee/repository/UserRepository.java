@@ -9,6 +9,5 @@ import com.leave.employee.domain.EmployeeUser;
 public interface UserRepository extends MongoRepository<EmployeeUser, String> {
 	
 	EmployeeUser findByUserName(String userName);
-	
 
 }

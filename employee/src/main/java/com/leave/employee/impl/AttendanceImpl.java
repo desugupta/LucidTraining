@@ -27,7 +27,7 @@ public class AttendanceImpl implements AttendanceService {
 	public EmployeeAttendance saveAttendance(EmployeeAttendance employeeAttendance) throws ParseException {
 		try {
 			EmployeeAttendance employeeAttendanceObj = new EmployeeAttendance();
-
+			
 			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 			String timeIn = employeeAttendance.getTimeIn();
 			String timeOut = employeeAttendance.getTimeOut();
@@ -45,15 +45,11 @@ public class AttendanceImpl implements AttendanceService {
 			float working=hours+hr;
 			String workingHours=String.valueOf(working);
 			workingHours=workingHours.substring(0,5);
-			
-
-		//	String workingHours = String.valueOf(hours_difference) + "." + String.valueOf(minutes_difference);
 
 			employeeAttendanceObj.setEmployeeId(employeeAttendance.getEmployeeId());
 			employeeAttendanceObj.setNormalDate(employeeAttendance.getNormalDate());
 			employeeAttendanceObj.setTimeIn(timeIn);
 			employeeAttendanceObj.setTimeOut(timeOut);
-			employeeAttendanceObj.setWorkingHours(workingHours);
 			employeeAttendanceObj.setWorking(working);
 			employeeAttendanceObj.setLocation(employeeAttendance.getLocation());
 			employeeAttendanceObj = attendanceRepository.save(employeeAttendanceObj);
@@ -66,5 +62,7 @@ public class AttendanceImpl implements AttendanceService {
 			throw e;
 		}
 	}
+	
+	//	String workingHours = String.valueOf(hours_difference) + "." + String.valueOf(minutes_difference);
 
 }

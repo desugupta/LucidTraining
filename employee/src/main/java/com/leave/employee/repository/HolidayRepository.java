@@ -8,6 +8,5 @@ import com.leave.employee.domain.HolidayCollection;
 @Repository
 public interface HolidayRepository extends MongoRepository<HolidayCollection, String>{
 	
-	
 
 }

@@ -8,7 +8,4 @@ public interface AttendanceService {
 	
 public EmployeeAttendance saveAttendance(EmployeeAttendance employeeAttendance) throws ParseException;
 
-
-
-
 }
