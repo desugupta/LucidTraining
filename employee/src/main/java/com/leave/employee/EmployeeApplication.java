@@ -12,14 +12,15 @@ public class EmployeeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EmployeeApplication.class, args);
 	}
-	
+
 	@Bean
 	public LocalValidatorFactoryBean validator() {
-	    return new LocalValidatorFactoryBean();
+		return new LocalValidatorFactoryBean();
 	}
-	
+
 	@Bean
 	public ValidatingMongoEventListener validatingMongoEventListener() {
-	    return new ValidatingMongoEventListener(validator());
+		return new ValidatingMongoEventListener(validator());
 	}
+	
 }

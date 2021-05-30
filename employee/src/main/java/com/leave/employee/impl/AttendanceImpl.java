@@ -33,6 +33,7 @@ public class AttendanceImpl implements AttendanceService {
 	@Override
 	public EmployeeAttendance saveAttendance(EmployeeAttendance employeeAttendance) throws ParseException {
 		try {
+			logger.info("+++++ Entry into saveAttendance() method in AttendanceImpl class +++++");
 			EmployeeAttendance employeeAttendanceObj = new EmployeeAttendance();
 			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 			String timeIn = employeeAttendance.getTimeIn();
@@ -60,15 +61,14 @@ public class AttendanceImpl implements AttendanceService {
 			employeeAttendanceObj.setLocation(employeeAttendance.getLocation());
 			employeeAttendanceObj = attendanceRepository.save(employeeAttendanceObj);
 			employeeAttendanceObj = modelMapper.map(employeeAttendanceObj, EmployeeAttendance.class);
+			logger.info("+++++ Exit from saveAttendance() method in AttendanceImpl class +++++");
 			return employeeAttendanceObj;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception exception) {
+			exception.printStackTrace();
 			logger.error("Error occurred while saving the employee attendance for the given date:"
-					+ employeeAttendance.getNormalDate(), e);
-			throw e;
+					+ employeeAttendance.getNormalDate(), exception);
+			throw exception;
 		}
 	}
 	
-	//	String workingHours = String.valueOf(hours_difference) + "." + String.valueOf(minutes_difference);
-
 }

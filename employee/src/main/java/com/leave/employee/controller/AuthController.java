@@ -2,6 +2,7 @@ package com.leave.employee.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,14 +15,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.leave.employee.domain.EmployeeUser;
+import com.leave.employee.domain.ResponseObject;
 import com.leave.employee.impl.JwtUtil;
 import com.leave.employee.impl.MyUserDetailsService;
 import com.leave.employee.impl.SequenceGeneratorService;
 import com.leave.employee.model.AuthenticationRequest;
 import com.leave.employee.model.AuthenticationResponse;
 import com.leave.employee.repository.UserRepository;
+import com.leave.employee.util.ResponseUtil;
 
 @RestController
 public class AuthController {
@@ -52,49 +54,34 @@ public class AuthController {
 
 	public static final String SEQUENCE_NAME = "user_sequence";
 
+	/**
+	 * @author rajasekhar.d
+	 * @description To save the Employee user in the database
+	 */
 	@PostMapping("/subscription")
 	public ResponseEntity<?> subscribeClient(@RequestBody EmployeeUser employeeUser) {
-		// EmployeeUser employeeDetails = new EmployeeUser();
+		EmployeeUser empObj = null;
+		String phoneNumber = employeeUser.getMobileNo();
+		if (!phoneNumber.startsWith("+91")) {
+			phoneNumber = "+91" + phoneNumber;
+		}
 		employeeUser.setEmployeeId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME));
 		employeeUser.setPassword(bcryptEncoder.encode(employeeUser.getPassword()));
-
-		/*
-		 * String phoneNumber = employeeUser.getMobileNo(); if
-		 * (!phoneNumber.startsWith("+91")) { phoneNumber = "+91" + phoneNumber; }
-		 * employeeDetails.setUserName(employeeUser.getUserName());
-		 * employeeDetails.setPassword(passwordEncoder.encode(employeeUser.getPassword()
-		 * )); employeeDetails.setFirstName(employeeUser.getFirstName());
-		 * employeeDetails.setLastName(employeeUser.getLastName());
-		 * employeeDetails.setEmailId(employeeUser.getEmailId());
-		 * employeeDetails.setAge(employeeUser.getAge());
-		 * employeeDetails.setGender(employeeUser.getGender());
-		 * employeeDetails.setMobileNo(phoneNumber);
-		 * employeeDetails.setDob(employeeUser.getDob());
-		 * employeeDetails.setRoles(employeeUser.getRoles());
-		 * employeeDetails.setDepartment(employeeUser.getDepartment());
-		 * employeeDetails.setDesignation(employeeUser.getDesignation());
-		 * employeeDetails.setCountry(employeeUser.getCountry());
-		 * employeeDetails.setCity(employeeUser.getCity());
-		 * employeeDetails.setPincode(employeeUser.getPincode());
-		 * employeeDetails.setEmployeeStatus(employeeUser.getEmployeeStatus());
-		 * employeeDetails.setPermanentAddress(employeeUser.getPermanentAddress());
-		 * employeeDetails.setBloodGroup(employeeUser.getBloodGroup());
-		 * employeeDetails.setJoinDate(employeeUser.getJoinDate());
-		 * employeeDetails.setEndDate(employeeUser.getEndDate());
-		 * employeeDetails.setManagerEmpId(employeeUser.getManagerEmpId());
-		 */
-
-		// employeeDetails = modelMapper.map(employeeDetails, EmployeeUser.class);
+		employeeUser.setMobileNo(phoneNumber);
 		try {
-			userRepository.save(employeeUser);
+			empObj = userRepository.save(employeeUser);
 		} catch (Exception e) {
 			return ResponseEntity
 					.ok(new AuthenticationResponse("Error during client Subscription" + employeeUser.getUserName()));
 		}
-		return ResponseEntity
-				.ok(new AuthenticationResponse("Sucessful Subscription for client" + employeeUser.getUserName()));
+		return new ResponseEntity<ResponseObject<?>>(ResponseUtil.createSuccessResponse(empObj), HttpStatus.OK);
+
 	}
 
+	/**
+	 * @author rajasekhar.d
+	 * @description To authenticate the employee user and return the jwt token
+	 */
 	@PostMapping("/authentication")
 	public ResponseEntity<?> authenticateClient(@RequestBody AuthenticationRequest authenticationRequest) {
 		String userName = authenticationRequest.getUserName();
