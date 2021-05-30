@@ -23,11 +23,17 @@ public class AttendanceImpl implements AttendanceService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	
+	/**
+	 * @author rajasekhar.d
+	 * @description To save the attendance record in database
+	 * @RequestBody EmployeeAttendance
+	 * @return EmployeeAttendance
+	 */
 	@Override
 	public EmployeeAttendance saveAttendance(EmployeeAttendance employeeAttendance) throws ParseException {
 		try {
 			EmployeeAttendance employeeAttendanceObj = new EmployeeAttendance();
-			
 			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 			String timeIn = employeeAttendance.getTimeIn();
 			String timeOut = employeeAttendance.getTimeOut();

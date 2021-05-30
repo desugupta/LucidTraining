@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.leave.employee.domain.Role;
 import com.leave.employee.repository.RoleRepository;
@@ -26,6 +27,7 @@ public class Rolesimpl implements RoleService {
 	@Override
 	public Role saveRole(Role role) {
 		try {
+			logger.info("dasdd");
 			Role roleObj = new Role();
 			String roleId = Integer.toString(generateRandomnumber());
 			if (role.getRoleName() != null && !role.getRoleName().isEmpty()) {

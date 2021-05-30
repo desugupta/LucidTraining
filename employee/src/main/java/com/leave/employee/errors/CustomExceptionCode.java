@@ -9,7 +9,9 @@ public enum CustomExceptionCode {
 
     TEST("EHV001","TEST"),
     
-	JSON_PARSE_EXCEPTION("EHV004","Exception occured while parsing java object");
+	JSON_PARSE_EXCEPTION("EHV004","Exception occured while parsing java object"), 
+	
+	DATE_RANGE_EXCEPTION("ERR6104", "Start date should be before the end date");
 
 	private final String errCode;
 	private final String errMsg;
