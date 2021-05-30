@@ -23,13 +23,9 @@ public class LeaveStatistics extends BaseDomain {
 	@Version
 	private Integer versionId;
 	private Integer employeeId;
-	// private String leaveBalance;// [sick,earned leave]
 	private List<LeaveTypeBalance> leaveTypeBalance;
-	private Integer accrusedThisYear;
-	private Integer creditedFromLastYear;
 	private Integer annualAllotment;
 
-	// private String leaveRequest;// [planned,approved]
 	public String getId() {
 		return id;
 	}
@@ -62,22 +58,6 @@ public class LeaveStatistics extends BaseDomain {
 		this.leaveTypeBalance = leaveTypeBalance;
 	}
 
-	public Integer getAccrusedThisYear() {
-		return accrusedThisYear;
-	}
-
-	public void setAccrusedThisYear(Integer accrusedThisYear) {
-		this.accrusedThisYear = accrusedThisYear;
-	}
-
-	public Integer getCreditedFromLastYear() {
-		return creditedFromLastYear;
-	}
-
-	public void setCreditedFromLastYear(Integer creditedFromLastYear) {
-		this.creditedFromLastYear = creditedFromLastYear;
-	}
-
 	public Integer getAnnualAllotment() {
 		return annualAllotment;
 	}
@@ -89,8 +69,7 @@ public class LeaveStatistics extends BaseDomain {
 	@Override
 	public String toString() {
 		return "LeaveStatistics [id=" + id + ", versionId=" + versionId + ", employeeId=" + employeeId
-				+ ", leaveTypeBalance=" + leaveTypeBalance + ", accrusedThisYear=" + accrusedThisYear
-				+ ", creditedFromLastYear=" + creditedFromLastYear + ", annualAllotment=" + annualAllotment + "]";
+				+ ", leaveTypeBalance=" + leaveTypeBalance + ", annualAllotment=" + annualAllotment + "]";
 	}
 
 }

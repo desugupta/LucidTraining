@@ -14,18 +14,16 @@ import lombok.ToString;
 @Setter
 @ToString
 @Document(collection = "HolidayCollection")
-public class HolidayCollection {
+public class HolidayCollection extends BaseDomain {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String id;
 	private Integer holidayId;
-	//private Date holidayDate;
 	private LocalDate holiday;
 	private String reason;
 	private Integer holidayYear;
-
 	
 	public LocalDate getHoliday() {
 		return holiday;
@@ -50,7 +48,6 @@ public class HolidayCollection {
 		this.holidayId = holidayId;
 	}
 
-
 	public String getReason() {
 		return reason;
 	}
@@ -71,6 +68,5 @@ public class HolidayCollection {
 	public String toString() {
 		return "HolidayCollection [id=" + id + ", holidayId=" + holidayId + ", holiday=" + holiday + ", reason=" + reason + ", holidayYear=" + holidayYear + "]";
 	}
-
 
 }

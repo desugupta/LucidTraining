@@ -12,15 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import com.leave.employee.impl.JwtFilterRequest;
 import com.leave.employee.impl.MyUserDetailsService;
-import com.leave.employee.repository.UserRepository;
 
-@Configuration
+@Configuration	
 @EnableWebSecurity
 @EnableScheduling
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -28,9 +24,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private MyUserDetailsService myUserDetailsService;
-
-	@Autowired
-	private UserRepository userRepository;
 
 	@Autowired
 	private JwtFilterRequest jwtRequestFilter;
@@ -48,11 +41,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
-	/*
-	 * @Bean public PasswordEncoder passwordEncoder() { return
-	 * NoOpPasswordEncoder.getInstance(); }
-	 */
-
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -64,5 +52,9 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 	 
+	/*
+	 * @Bean public PasswordEncoder passwordEncoder() { return
+	 * NoOpPasswordEncoder.getInstance(); }
+	 */
 
 }

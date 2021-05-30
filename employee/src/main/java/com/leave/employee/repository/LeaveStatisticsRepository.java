@@ -9,13 +9,8 @@ import com.leave.employee.domain.LeaveTypeBalance;
 @Repository
 public interface LeaveStatisticsRepository extends MongoRepository<LeaveStatistics, String>{
 
-	LeaveStatistics findByEmployeeId(Integer employeeId);
+	public LeaveStatistics findByEmployeeId(Integer employeeId);
 
-	void save(LeaveTypeBalance leaveType);
-
-	//LeaveStatistics save(LeaveTypeBalance leaveBalance);
-	
-	//LeaveStatistics save(LeaveStatistics leaveStatistics);
-
+	public void save(LeaveTypeBalance leaveType);
 
 }
