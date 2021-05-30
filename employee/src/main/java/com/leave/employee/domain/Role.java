@@ -1,5 +1,8 @@
 package com.leave.employee.domain;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,7 +17,9 @@ public class Role extends BaseDomain {
 	@Version
 	private Integer versionId;
 	private String roleId;
+	@NotEmpty(message = "roleName should not be empty")
 	private String roleName;
+	@NotNull
 	private String roleStatus;
 
 	public String getId() {

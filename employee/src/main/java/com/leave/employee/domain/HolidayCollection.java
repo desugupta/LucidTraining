@@ -1,11 +1,11 @@
 package com.leave.employee.domain;
 
 import java.time.LocalDate;
-import java.util.Date;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,6 +22,8 @@ public class HolidayCollection extends BaseDomain {
 	private String id;
 	private Integer holidayId;
 	private LocalDate holiday;
+	//@NotNull(message = "reson should not be empty")
+	@NotEmpty(message = "reason should not be empty")
 	private String reason;
 	private Integer holidayYear;
 	

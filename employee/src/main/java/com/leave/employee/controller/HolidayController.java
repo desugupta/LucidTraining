@@ -40,7 +40,5 @@ public class HolidayController {
 					HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
 
 }

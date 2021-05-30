@@ -28,6 +28,7 @@ public class AttendanceController {
 	/**
 	 * @author rajasekhar.d
 	 * @description To save the attendance record in database
+	 * @RequestBody EmployeeAttendance
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> saveAttendance(@RequestBody EmployeeAttendance attendance) {

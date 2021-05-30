@@ -34,6 +34,9 @@ import com.leave.employee.domain.HolidayCollection;
 import com.leave.employee.domain.LeaveStatistics;
 import com.leave.employee.domain.LeaveTypeBalance;
 import com.leave.employee.domain.LeavesDetails;
+import com.leave.employee.errors.CustomExceptionCode;
+import com.leave.employee.errors.CustomParameterizedException;
+import com.leave.employee.errors.RegisteredException;
 import com.leave.employee.exception.LeaveIsRejectedException;
 import com.leave.employee.exception.NoLeavesAvailableException;
 import com.leave.employee.model.AttendanceCsvResponse;
@@ -85,7 +88,15 @@ public class LeavesImpl implements LeaveService {
 			EmployeeUser empObj = employeeRepository.findByEmployeeId(leavesDetails.getEmployeeId());
 			EmployeeUser managerObj = employeeRepository.findByEmployeeId(leavesDetails.getEmployeeId());
 			LeaveStatistics leaveStatistics = leaveStatisticsRepository.findByEmployeeId(empObj.getEmployeeId());
-
+			
+			if(leavesDetails.getLeaveStartDate().isAfter(leavesDetails.getLeaveEndDate())) {
+				logger.error("Appointment Start Date cannot be after Appointment EndDate");
+				throw new CustomParameterizedException(
+						RegisteredException.DATE_RANGE_INVALID_EXCEPTION.getException(),
+						CustomExceptionCode.DATE_RANGE_EXCEPTION.getErrMsg(),
+						CustomExceptionCode.DATE_RANGE_EXCEPTION.getErrCode());
+			}			
+			
 			long numOfDays = ChronoUnit.DAYS.between(leavesDetails.getLeaveStartDate(), leavesDetails.getLeaveEndDate())
 					+ 1;
 			List<LocalDate> listOfDates = LongStream.range(0, numOfDays)

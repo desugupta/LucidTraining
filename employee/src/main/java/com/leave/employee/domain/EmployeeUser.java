@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
@@ -21,16 +24,22 @@ public class EmployeeUser extends BaseDomain {
 	private String id;
 	@Version
 	private Integer versionId;
+	
+	@NotEmpty(message = "userName should not be empty")
 	private String userName;
+	@NotEmpty(message = "password should not be empty")
 	private String password;
 	private Integer employeeId;
+	@NotEmpty(message = "firstName should not be empty")
 	private String firstName;
 	private String lastName;
+	@NotEmpty(message = "emailId should not be empty")
 	private String emailId;
 	private Integer age;
 	private String gender;
 	private String mobileNo;
 	private Date dob;   	
+	@NotEmpty(message = "password should not be empty")
 	private Set<Role> roles;
 	private String department;
 	private String designation;

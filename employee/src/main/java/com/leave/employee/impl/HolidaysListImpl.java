@@ -17,11 +17,12 @@ public class HolidaysListImpl implements HolidayService {
 	private HolidayRepository holidayRepository;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-/*
-	description  
-	params 
-	return
-	*/
+	
+	/**
+	 * @author rajasekhar.d
+	 * @description To save the holiday details in the database
+	 * @return HolidayCollection
+	 */ 
 	@Override
 	public HolidayCollection saveHolidayInformation(HolidayCollection holidaysList) {
 		try {
