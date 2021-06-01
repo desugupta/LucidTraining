@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,19 +16,20 @@ import com.leave.employee.domain.EmployeeUser;
 import com.leave.employee.domain.ResponseObject;
 import com.leave.employee.service.EmployeeService;
 import com.leave.employee.util.ResponseUtil;
-	
-@RestController 
+
+@RestController
 @RequestMapping(value = "/employee")
 public class EmployeeController {
-	
+
 	@Autowired
 	private EmployeeService employeeService;
-	
+
 	private final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
-	
+
 	/**
 	 * @author rajasekhar.d
-	 * @description to save the employee without authentication and authorization using spring security
+	 * @description to save the employee without authentication and authorization
+	 *              using spring security
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> saveEmployee(@RequestBody EmployeeUser employeeUser) {
@@ -42,7 +44,7 @@ public class EmployeeController {
 					HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	/**
 	 * @author rajasekhar.d
 	 * @description to update the employee
@@ -51,9 +53,10 @@ public class EmployeeController {
 	public ResponseEntity<?> updateEmployee(@RequestBody EmployeeUser employeeUser) {
 		try {
 			logger.info("+++++ Entry into updateRole method in Rest +++++");
-			EmployeeUser employeeObj=employeeService.updateEmployee(employeeUser);
+			EmployeeUser employeeObj = employeeService.updateEmployee(employeeUser);
 			logger.info("+++++ Exit from updateRole method in Rest +++++");
-			return new ResponseEntity<ResponseObject<?>>(ResponseUtil.createSuccessResponse(employeeObj), HttpStatus.OK);
+			return new ResponseEntity<ResponseObject<?>>(ResponseUtil.createSuccessResponse(employeeObj),
+					HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("Error in updating the role:", e.getMessage());
 			return new ResponseEntity<ResponseObject<?>>(ResponseUtil.createErrorResponse(e.getMessage()),
@@ -65,7 +68,6 @@ public class EmployeeController {
 	 * @author rajasekhar.d
 	 * @description to get the employee by employeeId
 	 */
-	//@PreAuthorize("hasRole('USER')")
 	// @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	//@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/{employeeId}", method = RequestMethod.GET)
@@ -81,12 +83,13 @@ public class EmployeeController {
 					HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	/**
 	 * @author rajasekhar.d
-	 * @description to get all employees details available in the employee collection
+	 * @description to get all employees details available in the employee
+	 *              collection
 	 */
-	@RequestMapping(value="/getAll",method = RequestMethod.GET)
+	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllEmployee() {
 		try {
 			logger.info("+++++ Entry into getAllEmployee() method in Controller +++++");
@@ -99,5 +102,5 @@ public class EmployeeController {
 					HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 }

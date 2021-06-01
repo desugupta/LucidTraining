@@ -1,26 +1,29 @@
 package com.leave.employee.domain;
 
 import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "LeaveDetails")
-public class LeavesDetails extends BaseDomain {
+public class LeavesDetails {
 
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String id;
 	@Version
 	private Integer versionId;
+	@NotNull(message = "should not be empty or null")	
 	private Integer employeeId;
 	private LocalDate approvalDate;
 	private LocalDate requestDate;
 	private LocalDate leaveStartDate;
 	private LocalDate leaveEndDate;
 	private String leaveStatus;// (approved/rejected)
-	private String leaveType; // (EL,SL,LOP)
+	private String leaveType; // (earnedLeave,sickLeave,lossOfPay)
 	private String leaveDay;// (full or half)
 	private String leaveReason;
 	private Integer managerEmpId;

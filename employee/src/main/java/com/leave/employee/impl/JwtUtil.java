@@ -22,7 +22,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class JwtUtil {	
 	
-	private static final String AUTHORITIES_KEY = "auth";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -48,7 +47,7 @@ public class JwtUtil {
     	  final String authorities = authentication.getAuthorities().stream()
                   .map(GrantedAuthority::getAuthority)
                   .collect(Collectors.joining(","));
-        return Jwts.builder().setSubject(authentication.getName()).claim(AUTHORITIES_KEY, authorities).setIssuedAt(new Date(System.currentTimeMillis()))
+        return Jwts.builder().setSubject(authentication.getName()).claim(Constants.AUTHORITIES_KEY, authorities).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, Constants.SECRET_KEY).compact();
     }
@@ -62,7 +61,7 @@ public class JwtUtil {
     UsernamePasswordAuthenticationToken getAuthentication(final String token, final Authentication existingAuth, final UserDetails userDetails) {
 		Claims claims = Jwts.parser().setSigningKey(Constants.SECRET_KEY).parseClaimsJws(token).getBody();
         final Collection authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                Arrays.stream(claims.get(Constants.AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 

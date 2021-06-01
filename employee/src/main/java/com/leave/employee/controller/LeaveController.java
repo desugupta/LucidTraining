@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,6 +54,7 @@ public class LeaveController {
 	 * @author rajasekhar.d
 	 * @description to update the leave request by the manager
 	 */
+	@PreAuthorize("hasRole('MANAGER')")
 	@RequestMapping(method = RequestMethod.PUT)
 	public ResponseEntity<?> updateLeave(@RequestBody LeavesDetails leavesDetails) {
 		try {
@@ -93,6 +95,7 @@ public class LeaveController {
 	 * @author rajasekhar.d
 	 * @description To save the Leave Statistics of an employee
 	 */
+	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.POST,value="/leaveBalance")
 	public ResponseEntity<?> saveLeaveStatistics(@RequestBody LeaveStatistics leaveStatistics) {
 		try {

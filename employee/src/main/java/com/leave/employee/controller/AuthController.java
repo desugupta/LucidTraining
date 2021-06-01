@@ -1,6 +1,5 @@
 package com.leave.employee.controller;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +9,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.leave.employee.config.Constants;
 import com.leave.employee.domain.EmployeeUser;
 import com.leave.employee.domain.ResponseObject;
 import com.leave.employee.impl.JwtUtil;
@@ -27,9 +26,6 @@ import com.leave.employee.util.ResponseUtil;
 
 @RestController
 public class AuthController {
-
-	@Autowired
-	private ModelMapper modelMapper;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -47,13 +43,8 @@ public class AuthController {
 	private SequenceGeneratorService sequenceGeneratorService;
 
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
 	private BCryptPasswordEncoder bcryptEncoder;
-
-	public static final String SEQUENCE_NAME = "user_sequence";
-
+	
 	/**
 	 * @author rajasekhar.d
 	 * @description To save the Employee user in the database
@@ -65,7 +56,7 @@ public class AuthController {
 		if (!phoneNumber.startsWith("+91")) {
 			phoneNumber = "+91" + phoneNumber;
 		}
-		employeeUser.setEmployeeId(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME));
+		employeeUser.setEmployeeId(sequenceGeneratorService.getSequenceNumber(Constants.SEQUENCE_NAME));
 		employeeUser.setPassword(bcryptEncoder.encode(employeeUser.getPassword()));
 		employeeUser.setMobileNo(phoneNumber);
 		try {

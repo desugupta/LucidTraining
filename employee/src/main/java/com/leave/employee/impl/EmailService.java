@@ -20,10 +20,9 @@ public class EmailService {
 	 * @author rajasekhar.d
 	 * @description To send the leave notification mail to the manager whenever employee requests for the leave
 	 */
-	public void sendEmail(EmployeeUser managerObj,EmployeeUser empObj, double appliedLeaves) {
+	public void sendEmail(EmployeeUser empObj, double appliedLeaves) {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom(emailFrom);
-	   // message.setTo(managerObj.getEmailId());
 	    message.setTo(empObj.getManagerEmailId());
 		message.setSubject("Employee Leave Notification");
 		message.setText("Please approve or reject the leave of "+empObj.getUserName()+" for "+appliedLeaves+" days" );

@@ -83,9 +83,7 @@ public class LeavesImpl implements LeaveService {
 	public LeavesDetails applyLeave(LeavesDetails leavesDetails) {
 		try {
 			EmployeeUser empObj = employeeRepository.findByEmployeeId(leavesDetails.getEmployeeId());
-			EmployeeUser managerObj = employeeRepository.findByEmployeeId(empObj.getManagerEmpId());
 			LeaveStatistics leaveStatistics = leaveStatisticsRepository.findByEmployeeId(empObj.getEmployeeId());
-
 			if (leavesDetails.getLeaveStartDate().isAfter(leavesDetails.getLeaveEndDate())) {
 				logger.error("Appointment Start Date cannot be after Appointment EndDate");
 				throw new CustomParameterizedException(RegisteredException.DATE_RANGE_INVALID_EXCEPTION.getException(),
@@ -119,7 +117,7 @@ public class LeavesImpl implements LeaveService {
 			if (leavesDetails.getLeaveDay().equalsIgnoreCase(Constants.HALF)) {
 				appliedLeaves = appliedLeaves - 0.5;
 			}
-			emailService.sendEmail(managerObj, empObj, appliedLeaves);
+			emailService.sendEmail(empObj, appliedLeaves);
 			LeavesDetails leaveObj = new LeavesDetails();
 			leaveObj.setEmployeeId(leavesDetails.getEmployeeId());
 			leaveObj.setRequestDate(LocalDate.now());
@@ -129,7 +127,7 @@ public class LeavesImpl implements LeaveService {
 			leaveObj.setLeaveType(leavesDetails.getLeaveType());
 			leaveObj.setLeaveDay(leavesDetails.getLeaveDay());
 			leaveObj.setLeaveReason(leavesDetails.getLeaveReason());
-			leaveObj.setManagerEmpId(managerObj.getEmployeeId());
+			leaveObj.setManagerEmpId(empObj.getManagerEmpId());
 			leaveObj.setDepartment(empObj.getDepartment());
 			leaveObj = leaveRepository.save(leaveObj);
 			leaveObj = modelMapper.map(leaveObj, LeavesDetails.class);
