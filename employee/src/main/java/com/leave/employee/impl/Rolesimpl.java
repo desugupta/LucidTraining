@@ -3,7 +3,6 @@ package com.leave.employee.impl;
 import java.util.List;
 import java.util.Random;
 
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,6 @@ import com.leave.employee.service.RoleService;
 
 @Service
 public class Rolesimpl implements RoleService {
-
-	@Autowired
-	private ModelMapper modelMapper;	
 
 	@Autowired
 	private RoleRepository roleRepository;
