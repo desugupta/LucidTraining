@@ -2,13 +2,15 @@ package com.leave.employee.domain;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "EmployeeAttendance")
-public class EmployeeAttendance extends BaseDomain {
+public class EmployeeAttendance {
 
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -16,13 +18,16 @@ public class EmployeeAttendance extends BaseDomain {
 	@Version
 	private Integer versionId;
 	private Integer sno;
+	@NotNull(message = "should not be empty or null")
 	private Integer employeeId;
+	@NotNull(message = "should not be empty or null")
 	private Date normalDate;
+	@NotNull(message = "should not be empty or null")	
 	private String timeIn;
+	@NotNull(message = "should not be empty or null")
 	private String timeOut;
 	private float working;
 	private String location;
-
 
 	public Integer getSno() {
 		return sno;
@@ -102,5 +107,5 @@ public class EmployeeAttendance extends BaseDomain {
 				+ employeeId + ", normalDate=" + normalDate + ", timeIn=" + timeIn + ", timeOut=" + timeOut
 				+ ", working=" + working + ", location=" + location + "]";
 	}
-	
+
 }

@@ -37,7 +37,7 @@ public class Rolesimpl implements RoleService {
 			}
 			roleObj.setRoleId(roleId);
 			roleObj = roleRepository.save(roleObj);
-			roleObj = modelMapper.map(roleObj, Role.class);
+			//roleObj = modelMapper.map(roleObj, Role.class);
 			return roleObj;
 		} catch (Exception e) {
 			logger.error("Error occurred while saving the role:", e);

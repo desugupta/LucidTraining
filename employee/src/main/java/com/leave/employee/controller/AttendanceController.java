@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.leave.employee.domain.EmployeeAttendance;
 import com.leave.employee.domain.ResponseObject;
-import com.leave.employee.domain.Role;
 import com.leave.employee.service.AttendanceService;
 import com.leave.employee.util.ResponseUtil;
 
@@ -23,7 +21,7 @@ public class AttendanceController {
 	@Autowired
 	private AttendanceService attendanceService;
 	
-	private final Logger logger = LoggerFactory.getLogger(RolesRest.class);
+	private final Logger logger = LoggerFactory.getLogger(AttendanceController.class);
 
 	/**
 	 * @author rajasekhar.d

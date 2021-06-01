@@ -1,29 +1,30 @@
 package com.leave.employee.domain;
 
 import java.time.LocalDate;
-import javax.validation.constraints.NotEmpty;
+
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
+@Setter	
 @ToString
 @Document(collection = "HolidayCollection")
-public class HolidayCollection extends BaseDomain {
+public class HolidayCollection {
 
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String id;
 	private Integer holidayId;
-	private LocalDate holiday;
-	//@NotNull(message = "reson should not be empty")
-	@NotEmpty(message = "reason should not be empty")
+	private LocalDate holiday;	
+	@NotNull(message = "should not be empty or null")
 	private String reason;
 	private Integer holidayYear;
 	

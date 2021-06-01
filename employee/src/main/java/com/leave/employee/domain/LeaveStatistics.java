@@ -1,11 +1,10 @@
 package com.leave.employee.domain;
 
 import java.util.List;
-
+import javax.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,15 +13,20 @@ import lombok.ToString;
 @Getter
 @ToString
 @Document(collection = "LeaveStatistics")
-public class LeaveStatistics extends BaseDomain {
+public class LeaveStatistics {
 
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String id;
 	@Version
 	private Integer versionId;
+	
+	@NotNull(message = "should not be empty or null")
 	private Integer employeeId;
+	
+	@NotNull(message = "should not be empty or null")
 	private List<LeaveTypeBalance> leaveTypeBalance;
 	private Integer annualAllotment;
 

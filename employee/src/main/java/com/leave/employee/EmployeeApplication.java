@@ -22,5 +22,5 @@ public class EmployeeApplication {
 	public ValidatingMongoEventListener validatingMongoEventListener() {
 		return new ValidatingMongoEventListener(validator());
 	}
-	
+
 }

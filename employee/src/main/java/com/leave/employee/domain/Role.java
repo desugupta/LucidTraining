@@ -8,8 +8,9 @@ import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "roles")
-public class Role extends BaseDomain {
+public class Role  {
 
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -17,9 +18,9 @@ public class Role extends BaseDomain {
 	@Version
 	private Integer versionId;
 	private String roleId;
-	@NotEmpty(message = "roleName should not be empty")
+	@NotEmpty(message = "should not be empty or null")
 	private String roleName;
-	@NotNull
+	@NotEmpty(message = "should not be empty or null")
 	private String roleStatus;
 
 	public String getId() {

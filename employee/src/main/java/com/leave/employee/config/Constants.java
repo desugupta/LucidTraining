@@ -25,5 +25,8 @@ public class Constants {
 	public static final String END_DATE = "EndDate";
 	public static final String WORKING_HOURS = "WorkingHours";
 	public final static String DATE_PATTERN = "yyyy-MM-dd";
+	public static final String SEQUENCE_NAME = "user_sequence";
+	public static final String AUTHORITIES_KEY = "auth";
+
 
 }
